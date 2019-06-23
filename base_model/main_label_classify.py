@@ -105,6 +105,7 @@ if __name__ == '__main__':
     config["train_size"]=256
     config["max_length"]=200
     config["id_word"]=vocab_dict
+    config["word_dim"]=128
     if config["train_size"] < FLAGS.shuffle_buffer_size:
         FLAGS.shuffle_buffer_size = config["train_size"]
 
