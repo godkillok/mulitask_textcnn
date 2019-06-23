@@ -22,7 +22,7 @@ def save_vocab_to_txt_file(vocab, txt_path):
         vocab: (iterable object) yields token
         txt_path: (stirng) path to vocab file
     """
-    with open(txt_path, "w") as f:
+    with open(txt_path, "w", encoding="utf8") as f:
         f.write("\n".join(token for token in vocab))
 
 def save_label_to_txt_file(labels, txt_path):
@@ -32,7 +32,7 @@ def save_label_to_txt_file(labels, txt_path):
         vocab: (iterable object) yields token
         txt_path: (stirng) path to vocab file
     """
-    with open(txt_path, "w") as f:
+    with open(txt_path, "w", encoding="utf8") as f:
         for vo in labels:
             f.write("{}\x01\t{}\n".format(vo[0],vo[1]))
 
@@ -42,7 +42,7 @@ def save_dict_to_json(d, json_path):
         d: (dict)
         json_path: (string) path to json file
     """
-    with open(json_path, 'w') as f:
+    with open(json_path, 'w', encoding="utf8") as f:
         d = {k: v for k, v in d.items()}
         json.dump(d, f, indent=4)
 
@@ -55,7 +55,7 @@ def update_label(txt_path, labels):
     Returns:
         dataset_size: (int) number of elements in the dataset
     """
-    with open(txt_path) as f:
+    with open(txt_path,"r",encoding="utf8") as f:
         for i, line in enumerate(f):
             li=json.loads(line)
             labels.append(li.get("label"))
