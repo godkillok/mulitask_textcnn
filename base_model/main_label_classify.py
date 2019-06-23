@@ -119,6 +119,9 @@ if __name__ == '__main__':
         model_dir=model_dir,
         config=run_config,
         params={
+            "word_dim":config["word_dim"],
+            "id_word":config["id_word"],
+            "train_size":config["train_size"],
             'max_length': config["max_length"],
             'emb_file': FLAGS.emb_file,
             'learning_rate': FLAGS.learning_rate,
