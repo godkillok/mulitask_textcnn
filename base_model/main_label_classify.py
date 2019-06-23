@@ -135,6 +135,7 @@ if __name__ == '__main__':
             'train_steps': train_steps,
             'summary_dir':model_dir,
             "label_size":20,
+            'use_focal_loss':False,
             'use_author_feature': False,
             'use_category_feature': False,
             'use_keyword_feature': False,
