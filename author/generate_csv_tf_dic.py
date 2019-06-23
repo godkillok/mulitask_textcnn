@@ -58,7 +58,7 @@ def parse_line_dict(record,vocab_dict,author_dict,label_dict):
     return [text, label_dict.get(label),author_dict.get(author)]
 
 
-def per_thouds_lines_dict(result_lines, vocab, path_text, count,flag_name=''):
+def per_thouds_lines_dict(result_lines, path_text, count,flag_name=''):
     tf_lines = []
 
     rl_num=0
@@ -72,10 +72,7 @@ def per_thouds_lines_dict(result_lines, vocab, path_text, count,flag_name=''):
             text += [pad_word] * (sentence_max_len - len(text))
         g={"text":text,"label":label,"author":author}
         tf_lines.append(g)
-
-
-
-        if rl_num%1000==0:
+        if rl_num%3000==0:
             flag_name=str(rl_num)
             write_tfrecords(tf_lines, path_text, count)
             tf_lines = []
@@ -103,10 +100,12 @@ def generate_tf_dic(path_text):
         lines = f.readlines()
         for line in lines:
             result_lines.append(parse_line_dict(line,author_dict,label_dict))
-            if count % 20000 == 0 or count == len(lines) - 1:
+            if count % 50000 == 0:
                 print(count)
-                per_thouds_lines_dict(result_lines, vocab, path_text, count)
+                per_thouds_lines_dict(result_lines, path_text, count)
                 result_lines = []
+        if len(result_lines)>0:
+            per_thouds_lines_dict(result_lines, path_text, count)
 
 
 def write_tfrecords(tf_lines, path_text, count):
@@ -123,9 +122,11 @@ def write_tfrecords(tf_lines, path_text, count):
     for data in tf_lines:
         text = data["text"]
         label = data["label"]
+        author=data["author"]
         example = tf.train.Example(features=tf.train.Features(feature={
             'text': feature_auto(list(text)),
-            'label': feature_auto(int(label))
+            'label': feature_auto(int(label)),
+            'author': feature_auto(int(author))
         }))
 
         writer.write(example.SerializeToString())
@@ -143,7 +144,6 @@ def main():
             # if file.endswith("ain_set.csv"):
             #     print('start to process file {}'.format(file))
             generate_tf_dic(os.path.join(root, file))
-    print(set(label_class))
     # os.system('cd {}'.format(s3_input))
     # os.system('find . -name "*" -type f -size 0c | xargs -n 1 rm -f')
 
