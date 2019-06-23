@@ -4,7 +4,7 @@ from collections import Counter
 import json
 import os
 import re
-
+from common_tool import per_line
 parser = argparse.ArgumentParser()
 parser.add_argument('--min_count_word', default=20, help="Minimum count for words in the dataset", type=int)
 parser.add_argument('--data_dir', default='/data/tanggp/youtube8m', help="Directory containing the dataset")
@@ -14,9 +14,6 @@ NUM_OOV_BUCKETS = 1 # number of buckets (= number of ids) for unknown words
 PAD_WORD = '0'
 label_class=[]
 
-def clean_str(text):
-    text = text.strip()
-    return text
 
 def save_vocab_to_txt_file(vocab, txt_path):
     """
@@ -50,11 +47,7 @@ def update_vocab(txt_path, vocab,word_lenth):
     """
     with open(txt_path) as f:
         for i, line in enumerate(f):
-            li=json.loads(line)
-            pic_tags = [pic.split('\x02')[0] for pic in li.get('pic_tags', '').split('\x03')]
-            fields=li.get("title","")+' '+' '.join(li.get("tags",[""]))+' '.join(pic_tags)
-            text = clean_str(fields.lower())
-            text=text.replace("\n",' ').replace("\r"," ")
+            text=per_line(line)
             tokens = text.split(' ')
             tokens = [w.strip("'") for w in tokens if len(w.strip("'")) > 0]
             vocab.update(tokens)
