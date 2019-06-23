@@ -21,7 +21,7 @@ def gelu(input_tensor):
 
 
 class CnnModel(Model):
-    def __init__(self, config, input_ids, author_id, category_ids, keyword_ids, keyword_label_ids, is_training):
+    def __init__(self, config, input_ids, author_id, category_ids,  is_training):
         super(CnnModel, self).__init__(config, input_ids, is_training)
         self.author_id = author_id
         self.category_ids = category_ids
