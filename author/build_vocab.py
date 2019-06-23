@@ -48,8 +48,8 @@ def update_vocab(txt_path, vocab,word_lenth):
     with open(txt_path, "r", encoding="utf8") as f:
         for i, line in enumerate(f):
             text=per_line(line)
-            tokens = text.split(' ')
-            tokens = [w.strip("'") for w in tokens if len(w.strip("'")) > 0]
+            tokens = text.split()
+            tokens = [w.strip("'") for w in tokens if len(w.strip("'")) > 0 and not w.isdigit()]
             vocab.update(tokens)
             word_lenth.append(len(tokens))
     return i + 1
