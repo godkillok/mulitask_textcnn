@@ -100,7 +100,7 @@ def generate_tf_dic(path_text):
         vocab_dict = {l.strip(): (i) for i, l in enumerate(lines)}
         pad_word=vocab_dict.get(pad_word)
         OOV=vocab_dict.get(OOV)
-
+        print("pad_word {},OOV {}".format(pad_word,OOV))
     with open(FLAGS.path_author, 'r', encoding='utf8') as f:
         lines = f.readlines()
         author_dict = {l.strip().split("\x01\t")[0]: i for i, l in enumerate(lines)}
