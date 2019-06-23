@@ -90,7 +90,7 @@ def assign_pretrained_word_embedding(params):
     # import fastText as ft
     # word2vec_model = ft.load_model(FLAGS.fast_text)
 
-    vocab_size=params["vocab_size"]
+    vocab_size=params["vocab_size"]+1
 
     word_embedding_final = np.zeros((vocab_size,FLAGS.embedding_size))  # create an empty word_embedding list.
 
