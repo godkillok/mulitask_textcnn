@@ -134,7 +134,7 @@ if __name__ == '__main__':
             'num_warmup_steps': num_warmup_steps,
             'train_steps': train_steps,
             'summary_dir':model_dir,
-            'use_author_feature': True,
+            'use_author_feature': False,
             'use_category_feature': False,
             'use_keyword_feature': False,
             'feature_dim': FLAGS.feature_dim
