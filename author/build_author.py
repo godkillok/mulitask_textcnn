@@ -76,3 +76,5 @@ if __name__ == '__main__':
     save_author_to_txt_file(author_sort, os.path.join(args.data_dir, 'textcnn_author_sort'))
     print("- done.")
     os.system("head {}".format( os.path.join(args.data_dir, 'textcnn_author_sort')))
+    print("=="*8)
+    os.system("tail {}".format(os.path.join(args.data_dir, 'textcnn_author_sort')))
