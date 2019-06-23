@@ -81,7 +81,7 @@ def per_thouds_lines_dict(result_lines, path_text, count,flag_name=''):
     if len(tf_lines)>0:
         flag_name = str(rl_num)
         print(len(tf_lines))
-        time.sleep(5)
+        #time.sleep(5)
         write_tfrecords(tf_lines, path_text, count)
             # tf_lines=[]
 
