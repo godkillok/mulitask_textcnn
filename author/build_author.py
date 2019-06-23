@@ -34,8 +34,7 @@ def save_author_to_txt_file(author, txt_path):
     """
     with open(txt_path, "w") as f:
         for vo in author:
-            for k,v in vo.items():
-                f.write("{}\x01\t{}\n".format(k,v))
+            f.write("{}\x01\t{}\n".format(vo[0],vo[1]))
 
 def save_dict_to_json(d, json_path):
     """Saves dict to json file
