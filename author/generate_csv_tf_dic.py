@@ -7,6 +7,7 @@ import random
 
 import random
 import json
+import time
 from common_tool import per_line
 flags = tf.app.flags
 flags.DEFINE_string("data_dir", "/data/tanggp/youtube8m/", "Directory containing the dataset")
@@ -56,7 +57,7 @@ def parse_line_dict(record,vocab_dict,author_dict,label_dict):
     label=record.get("label")
     author=record.get("source_user")
 
-    return [text, label_dict.get(label),author_dict.get(author)]
+    return [text, label_dict.get(label),author_dict.get(author,len(author_dict))]
 
 
 def per_thouds_lines_dict(result_lines, path_text, count,flag_name=''):
@@ -79,6 +80,8 @@ def per_thouds_lines_dict(result_lines, path_text, count,flag_name=''):
         #     tf_lines = []
     if len(tf_lines)>0:
         flag_name = str(rl_num)
+        print(len(tf_lines))
+        time.sleep(5)
         write_tfrecords(tf_lines, path_text, count)
             # tf_lines=[]
 
