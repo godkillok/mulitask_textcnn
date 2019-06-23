@@ -73,7 +73,7 @@ if __name__ == '__main__':
     print('before remove {}'.format(len(words.keys())))
     # Only keep most frequent tokens
     max_word=max(words.values())
-    words_=[PAD_WORD,'1']
+    words_=[PAD_WORD,'-1v']
     words_ += [tok for tok, count in words.items() if count >= args.min_count_word and count<0.95*max_word]
     print('after remove {}'.format(len(words_)))
     # Add pad tokens
