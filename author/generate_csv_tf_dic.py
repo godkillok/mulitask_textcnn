@@ -20,7 +20,7 @@ FLAGS = flags.FLAGS
 
 sentence_max_len = 200
 pad_word = FLAGS.pad_word
-OOV = int(FLAGS.OOV)
+OOV =-1
 label_class=[]
 author_calss=[]
 def feature_auto(value):
