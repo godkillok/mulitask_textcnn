@@ -2,7 +2,7 @@
 #coding=utf-8
 import re
 import json
-punctuation = r"""!"#$%&()*+,’”-./:;<=>?@[\]^_`{|}~。，"""
+punctuation = r"""!"#$%&()*+,-./:;<=>?@[\]^_`{|}~。，"""
 
 def clean_str(text):
     text = text.strip()
