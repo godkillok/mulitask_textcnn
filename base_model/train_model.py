@@ -1,8 +1,6 @@
 #!/usr/bin/python3
 # -*- coding: utf-8 -*-
-# @Author : chenzhikuo
-# @Time :  2019/4/8
-# @Filename : train_model.py
+
 
 import tensorflow as tf
 from cnn_model import CnnModel

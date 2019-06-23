@@ -1,8 +1,5 @@
 #!/usr/bin/python3
 # -*- coding: utf-8 -*-
-# @Author : chenzhikuo
-# @Time :  2019/4/4
-# @Filename : cnn_data_process.py
 import os
 import tensorflow as tf
 from data_process import DataProcessor

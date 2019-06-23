@@ -1,8 +1,5 @@
 #!/usr/bin/python3
 # -*- coding: utf-8 -*-
-# @Author : chenzhikuo
-# @Time :  2019/4/8
-# @Filename : model.py
 import numpy as np
 import tensorflow as tf
 

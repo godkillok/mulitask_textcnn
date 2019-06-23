@@ -1,8 +1,5 @@
 #!/usr/bin/python3
 # -*- coding: utf-8 -*-
-# @Author : chenzhikuo
-# @Time :  2019/4/8
-# @Filename : process_add_feature.py
 
 
 import argparse

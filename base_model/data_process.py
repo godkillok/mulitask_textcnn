@@ -1,8 +1,5 @@
 #!/usr/bin/python3
 # -*- coding: utf-8 -*-
-# @Author : chenzhikuo
-# @Time :  2019/4/4
-# @Filename : data_process.py
 
 import json
 import tensorflow as tf

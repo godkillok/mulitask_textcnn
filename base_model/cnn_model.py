@@ -1,8 +1,5 @@
 #!/usr/bin/python3
 # -*- coding: utf-8 -*-
-# @Author : chenzhikuo
-# @Time :  2019/4/8
-# @Filename : cnn_model.py
 from model import Model
 from focal_loss import focal_loss_softmax
 import tensorflow as tf

@@ -1,8 +1,5 @@
 #!/usr/bin/python3
 # -*- coding: utf-8 -*-
-# @Author : chenzhikuo
-# @Time :  2019/2/23
-# @Filename : main_spam_classify.py
 import os
 import time
 import pickle

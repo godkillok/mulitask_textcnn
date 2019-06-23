@@ -1,8 +1,5 @@
 #!/usr/bin/python3
 # -*- coding: utf-8 -*-
-# @Author : chenzhikuo
-# @Time :  2019/4/25
-# @Filename : merge_train_set.py
 import os
 from logger import get_logger
 import json
