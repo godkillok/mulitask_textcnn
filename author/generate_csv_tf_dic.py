@@ -98,7 +98,7 @@ def generate_tf_dic(path_text):
         lines = f.readlines()
         vocab_dict = {l.strip(): (i) for i, l in enumerate(lines)}
         pad_word=vocab_dict.get(pad_word)
-        OOV=len(vocab_dict)-1
+        OOV=len(vocab_dict)
 
     with open(FLAGS.path_author, 'r', encoding='utf8') as f:
         lines = f.readlines()
