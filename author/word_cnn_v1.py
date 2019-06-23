@@ -17,13 +17,12 @@ import json
 #model_dir2 is the good one embedding size 1281
 flags = tf.app.flags
 flags.DEFINE_string("model_dir", "/data/tanggp/text_cnns/data/model1/", "Base directory for the model.")
-flags.DEFINE_string("train_file_pattern", "/data/tanggp/text_cnns/data/*train.tfrecords", "train file pattern")
-flags.DEFINE_string("eval_file_pattern", "/data/tanggp/text_cnns/data/*test.tfrecords", "evalue file pattern")
+flags.DEFINE_string("train_file_pattern", "/data/tanggp/text_cnns/data/text_cnn_txt_train_*", "train file pattern")
+flags.DEFINE_string("eval_file_pattern", "/data/tanggp/youtube8m/text_cnn_txt_golden_*", "evalue file pattern")
 # flags.DEFINE_string("train_file_pattern", "s3://shareit.tmp.ap-southeast-1/NeverDelete/tanggp/tfrecord/train*.tfrecords", "train file pattern")
 # flags.DEFINE_string("eval_file_pattern", "s3://shareit.tmp.ap-southeast-1/NeverDelete/tanggp/tfrecord/train*.tfrecords", "evalue file pattern")
 
-flags.DEFINE_string("pred_eval_file_pattern", "/data/tanggp/text_cnns/data/*test.tfrecords", "evalue file pattern")
-
+flags.DEFINE_string("pred_eval_file_pattern", "/data/tanggp/youtube8m/text_cnn_txt_golden_*", "evalue file pattern")
 
 flags.DEFINE_float("dropout_rate", 0.5, "Drop out rate")
 flags.DEFINE_float("learning_rate", 0.0002, "Learning rate")
@@ -49,7 +48,7 @@ flags.DEFINE_string("test_dir", " /data/tanggp/youtube8m/",
                     "Directory containing the dataset")
 flags.DEFINE_string("filter_sizes", "2,3,4,5", "Comma-separated list of number of window size in each filter")
 flags.DEFINE_string("pad_word", "<pad>", "used for pad sentence")
-flags.DEFINE_string("path_vocab", "/data/tanggp/text_cnns/data/words.txt", "used for word index")
+flags.DEFINE_string("path_vocab", "/data/tanggp/youtube8m/textcnn_words.txt", "used for word index")
 flags.DEFINE_string("fast_text", "/data/tanggp/text_cnns/data/super_more.bin", "used for word index")
 flags.DEFINE_string("work_type", "", "used for word index")
 flags.DEFINE_integer('task_id', 0, 'Task ID of the worker/replica running the training.')
