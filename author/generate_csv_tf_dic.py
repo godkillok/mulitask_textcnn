@@ -73,10 +73,10 @@ def per_thouds_lines_dict(result_lines, path_text, count,flag_name=''):
             text += [pad_word] * (sentence_max_len - len(text))
         g={"text":text,"label":label,"author":author}
         tf_lines.append(g)
-        if rl_num>1 and rl_num%10000==0:
-            flag_name=str(rl_num)
-            write_tfrecords(tf_lines, path_text, count)
-            tf_lines = []
+        # if rl_num>1 and rl_num%10000==0:
+        #     flag_name=str(rl_num)
+        #     write_tfrecords(tf_lines, path_text, count)
+        #     tf_lines = []
     if len(tf_lines)>0:
         flag_name = str(rl_num)
         write_tfrecords(tf_lines, path_text, count)
