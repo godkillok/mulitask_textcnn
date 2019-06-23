@@ -73,11 +73,11 @@ if __name__ == '__main__':
     print('before remove {}'.format(len(words.keys())))
     # Only keep most frequent tokens
     max_word=max(words.values())
-    words = [tok for tok, count in words.items() if count >= args.min_count_word and count<0.95*max_word]
+    words=[PAD_WORD,'1']
+    words += [tok for tok, count in words.items() if count >= args.min_count_word and count<0.95*max_word]
     print('after remove {}'.format(len(words)))
     # Add pad tokens
-    if PAD_WORD not in words: words.append(PAD_WORD)
-
+    #if PAD_WORD not in words: words.append(PAD_WORD)
     # Save vocabularies to file
     print("Saving vocabularies to file...")
     save_vocab_to_txt_file(words, os.path.join(args.data_dir, 'textcnn_words.txt'))
