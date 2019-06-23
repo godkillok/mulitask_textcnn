@@ -10,7 +10,7 @@ import json
 from common_tool import per_line
 flags = tf.app.flags
 flags.DEFINE_string("data_dir", "/data/tanggp/youtube8m/", "Directory containing the dataset")
-flags.DEFINE_string("pad_word", "0", "used for pad sentence")
+flags.DEFINE_string("pad_word", 0, "used for pad sentence")
 flags.DEFINE_string("path_vocab", "/data/tanggp/youtube8m/textcnn_words.txt", "used for word index")
 flags.DEFINE_string("path_author",  os.path.join("/data/tanggp/youtube8m/", 'textcnn_author_sort'), "Directory containing the dataset")
 flags.DEFINE_string("path_label",  os.path.join("/data/tanggp/youtube8m/", 'textcnn_label_sort'), "Directory containing the dataset")
