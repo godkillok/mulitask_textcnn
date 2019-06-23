@@ -25,7 +25,7 @@ def save_vocab_to_txt_file(vocab, txt_path):
     with open(txt_path, "w") as f:
         f.write("\n".join(token for token in vocab))
 
-def save_label_to_txt_file(author, txt_path):
+def save_label_to_txt_file(labels, txt_path):
     """
     Writes one token per line, 0-based line id corresponds to the id of the token.
     Args:
@@ -33,7 +33,7 @@ def save_label_to_txt_file(author, txt_path):
         txt_path: (stirng) path to vocab file
     """
     with open(txt_path, "w") as f:
-        for vo in author:
+        for vo in labels:
             f.write("{}\x01\t{}\n".format(vo[0],vo[1]))
 
 def save_dict_to_json(d, json_path):
@@ -47,7 +47,7 @@ def save_dict_to_json(d, json_path):
         json.dump(d, f, indent=4)
 
 
-def update_label(txt_path, author):
+def update_label(txt_path, labels):
     """Update word and tag vocabulary from dataset
     Args:
         txt_path: (string) path to file, one sentence per line
@@ -58,7 +58,7 @@ def update_label(txt_path, author):
     with open(txt_path) as f:
         for i, line in enumerate(f):
             li=json.loads(line)
-            author.append(li.get("label"))
+            labels.append(li.get("label"))
 
 
 
@@ -66,14 +66,14 @@ if __name__ == '__main__':
     args = parser.parse_args()
 
     # Build word vocab with train and test datasets
-    print("Building author...")
-    author = []
-    update_label(os.path.join(args.data_dir, 'txt_train'), author)
-    update_label(os.path.join(args.data_dir, 'txt_valid'), author)
+    print("Building labels...")
+    labels = []
+    update_label(os.path.join(args.data_dir, 'txt_train'), labels)
+    update_label(os.path.join(args.data_dir, 'txt_valid'), labels)
 
-    author_sort=sorted(Counter(author).items(), key=lambda x: x[1], reverse=True)
-    print('author num {}'.format(len(author_sort)))
-    save_label_to_txt_file(author_sort, os.path.join(args.data_dir, 'textcnn_author_sort'))
+    labels_sort=sorted(Counter(labels).items(), key=lambda x: x[1], reverse=True)
+    print('labels num {}'.format(len(labels_sort)))
+    save_label_to_txt_file(labels_sort, os.path.join(args.data_dir, 'textcnn_label_sort'))
     print("- done.")
     os.system("head {}".format( os.path.join(args.data_dir, 'textcnn_label_sort')))
     print("=="*8)
