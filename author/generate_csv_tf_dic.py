@@ -11,6 +11,7 @@ from common_tool import per_line
 flags = tf.app.flags
 flags.DEFINE_string("data_dir", "/data/tanggp/youtube8m/", "Directory containing the dataset")
 flags.DEFINE_string("pad_word", 0, "used for pad sentence")
+flags.DEFINE_string("OOV", 1, "used for pad sentence")
 flags.DEFINE_string("path_vocab", "/data/tanggp/youtube8m/textcnn_words.txt", "used for word index")
 flags.DEFINE_string("path_author",  os.path.join("/data/tanggp/youtube8m/", 'textcnn_author_sort'), "Directory containing the dataset")
 flags.DEFINE_string("path_label",  os.path.join("/data/tanggp/youtube8m/", 'textcnn_label_sort'), "Directory containing the dataset")
@@ -18,7 +19,7 @@ FLAGS = flags.FLAGS
 
 sentence_max_len = 200
 pad_word = FLAGS.pad_word
-
+OOV = FLAGS.OOV
 label_class=[]
 author_calss=[]
 def feature_auto(value):
@@ -50,7 +51,7 @@ def feature_auto(value):
 def parse_line_dict(record,vocab_dict,author_dict,label_dict):
     tokens=per_line(record)
     tokens=tokens.split()
-    text = [vocab_dict.get(r) for r in tokens if vocab_dict.get(r, '-99') != '-99']
+    text = [vocab_dict.get(r,OOV) for r in tokens]
     record=json.loads(record)
     label=record.get("label")
     author=record.get("author")
@@ -84,7 +85,7 @@ def per_thouds_lines_dict(result_lines, path_text, count,flag_name=''):
 def generate_tf_dic(path_text):
     with open(FLAGS.path_vocab, 'r', encoding='utf8') as f:
         lines = f.readlines()
-        vocab_dict = {l.strip(): (i+1) for i, l in enumerate(lines)}
+        vocab_dict = {l.strip(): (i+2) for i, l in enumerate(lines)}
 
     with open(FLAGS.path_author, 'r', encoding='utf8') as f:
         lines = f.readlines()
@@ -119,7 +120,9 @@ def write_tfrecords(tf_lines, path_text, count):
     writer = tf.python_io.TFRecordWriter(os.path.join(root_path, output_file))
     random.shuffle(tf_lines)
     num = 0
-    for data in tf_lines:
+    for i,data in enumerate(tf_lines):
+        if i==0:
+            print(tf_lines)
         text = data["text"]
         label = data["label"]
         author=data["author"]
