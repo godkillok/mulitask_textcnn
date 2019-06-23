@@ -104,8 +104,9 @@ def generate_tf_dic(path_text):
         lines = f.readlines()
         random.shuffle(lines)
         for line in lines:
+            count+=1
             result_lines.append(parse_line_dict(line,vocab_dict,author_dict,label_dict))
-            if count % 50000 == 0:
+            if count>0 and count % 50000 == 0:
                 print(count)
                 per_thouds_lines_dict(result_lines, path_text, count)
                 result_lines = []
