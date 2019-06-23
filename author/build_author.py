@@ -67,7 +67,7 @@ if __name__ == '__main__':
     args = parser.parse_args()
 
     # Build word vocab with train and test datasets
-    print("Building word vocabulary...")
+    print("Building author...")
     author = []
     update_author(os.path.join(args.data_dir, 'txt_train'), author)
     update_author(os.path.join(args.data_dir, 'txt_valid'), author)
