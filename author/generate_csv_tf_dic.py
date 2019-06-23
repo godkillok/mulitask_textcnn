@@ -99,6 +99,7 @@ def generate_tf_dic(path_text):
     count = 0
     with open(path_text, 'r', encoding='utf8') as f:
         lines = f.readlines()
+        random.shuffle(lines)
         for line in lines:
             result_lines.append(parse_line_dict(line,vocab_dict,author_dict,label_dict))
             if count % 50000 == 0:
