@@ -63,7 +63,7 @@ def parse_line_dict(record,vocab_dict,author_dict,label_dict,categories_dict):
         categories ="no"
 
 
-    return [text, label_dict.get(label),author_dict.get(author,len(author_dict)),categories_dict.get(categories)]
+    return [text, label_dict.get(label),author_dict.get(author,len(author_dict)),categories_dict.get(categories,len(categories))]
 
 
 def per_thouds_lines_dict(result_lines, path_text, count,flag_name=''):
