@@ -62,8 +62,8 @@ def parse_line_dict(record,vocab_dict,author_dict,label_dict):
 def per_thouds_lines_dict(result_lines, path_text, count,flag_name=''):
     tf_lines = []
 
-    rl_num=0
-    for rl in result_lines:
+
+    for rl_num,rl in enumerate(result_lines):
         text=rl[0]
         label=rl[1]
         author=rl[2]
@@ -73,7 +73,7 @@ def per_thouds_lines_dict(result_lines, path_text, count,flag_name=''):
             text += [pad_word] * (sentence_max_len - len(text))
         g={"text":text,"label":label,"author":author}
         tf_lines.append(g)
-        if rl_num%3000==0:
+        if rl_num>1 and rl_num%3000==0:
             flag_name=str(rl_num)
             write_tfrecords(tf_lines, path_text, count)
             tf_lines = []
