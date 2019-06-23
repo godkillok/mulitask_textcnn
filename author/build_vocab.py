@@ -73,21 +73,21 @@ if __name__ == '__main__':
     print('before remove {}'.format(len(words.keys())))
     # Only keep most frequent tokens
     max_word=max(words.values())
-    words=[PAD_WORD,'1']
-    words += [tok for tok, count in words.items() if count >= args.min_count_word and count<0.95*max_word]
-    print('after remove {}'.format(len(words)))
+    words_=[PAD_WORD,'1']
+    words_ += [tok for tok, count in words.items() if count >= args.min_count_word and count<0.95*max_word]
+    print('after remove {}'.format(len(words_)))
     # Add pad tokens
     #if PAD_WORD not in words: words.append(PAD_WORD)
     # Save vocabularies to file
     print("Saving vocabularies to file...")
-    save_vocab_to_txt_file(words, os.path.join(args.data_dir, 'textcnn_words.txt'))
+    save_vocab_to_txt_file(words_, os.path.join(args.data_dir, 'textcnn_words.txt'))
     print("- done.")
 
     # Save datasets properties in json file
     sizes = {
         'train_size': size_train_sentences,
         'test_size': size_test_sentences,
-        'vocab_size': len(words),
+        'vocab_size': len(words_),
         'pad_word': PAD_WORD,
         'num_oov_buckets': NUM_OOV_BUCKETS
     }
