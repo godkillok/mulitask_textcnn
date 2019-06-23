@@ -127,7 +127,7 @@ def write_tfrecords(tf_lines, path_text, count):
     num = 0
     for i,data in enumerate(tf_lines):
         if i==0:
-            print(tf_lines)
+            print("Start to convert {}".format(tf_lines))
         text = data["text"]
         label = data["label"]
         author=data["author"]
