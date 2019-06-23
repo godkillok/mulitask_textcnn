@@ -58,7 +58,10 @@ def update_categories(txt_path, categoriess):
     with open(txt_path,"r",encoding="utf8") as f:
         for i, line in enumerate(f):
             li=json.loads(line)
-            categoriess.append(li.get("categories",["no"])[0])
+            try:
+                categoriess.append(li.get("categories",["no"])[0])
+            except:
+                categoriess.append("no")
 
 
 
