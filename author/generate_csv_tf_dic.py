@@ -84,7 +84,7 @@ def per_thouds_lines_dict(result_lines, path_text, count,flag_name=''):
 def generate_tf_dic(path_text):
     with open(FLAGS.path_vocab, 'r', encoding='utf8') as f:
         lines = f.readlines()
-        vocab_dict = {l.strip(): i for i, l in enumerate(lines)}
+        vocab_dict = {l.strip(): (i+1) for i, l in enumerate(lines)}
 
     with open(FLAGS.path_author, 'r', encoding='utf8') as f:
         lines = f.readlines()
