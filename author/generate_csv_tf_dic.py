@@ -54,7 +54,7 @@ def parse_line_dict(record,vocab_dict,author_dict,label_dict):
     text = [vocab_dict.get(r,OOV) for r in tokens]
     record=json.loads(record)
     label=record.get("label")
-    author=record.get("author")
+    author=record.get("source_user")
 
     return [text, label_dict.get(label),author_dict.get(author)]
 
@@ -89,11 +89,11 @@ def generate_tf_dic(path_text):
 
     with open(FLAGS.path_author, 'r', encoding='utf8') as f:
         lines = f.readlines()
-        author_dict = {l.strip(): i for i, l in enumerate(lines)}
+        author_dict = {l.strip().split("\x01\t")[0]: i for i, l in enumerate(lines)}
 
     with open(FLAGS.path_label, 'r', encoding='utf8') as f:
         lines = f.readlines()
-        label_dict = {l.strip(): i for i, l in enumerate(lines)}
+        label_dict = {l.strip().split("\x01\t")[0]: i for i, l in enumerate(lines)}
 
     result_lines = []
     count = 0
