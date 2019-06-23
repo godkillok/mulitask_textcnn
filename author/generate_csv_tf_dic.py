@@ -12,6 +12,7 @@ from common_tool import per_line
 flags = tf.app.flags
 flags.DEFINE_string("data_dir", "/data/tanggp/youtube8m/", "Directory containing the dataset")
 flags.DEFINE_string("pad_word", '0', "used for pad sentence")
+flags.DEFINE_string("OOV", '1', "used for pad sentence")
 flags.DEFINE_string("path_vocab", "/data/tanggp/youtube8m/textcnn_words.txt", "used for word index")
 flags.DEFINE_string("path_author",  os.path.join("/data/tanggp/youtube8m/", 'textcnn_author_sort'), "Directory containing the dataset")
 flags.DEFINE_string("path_label",  os.path.join("/data/tanggp/youtube8m/", 'textcnn_label_sort'), "Directory containing the dataset")
@@ -20,7 +21,7 @@ FLAGS = flags.FLAGS
 
 sentence_max_len = 200
 pad_word = FLAGS.pad_word
-OOV =-1
+OOV =FLAGS.OOV
 label_class=[]
 author_calss=[]
 def feature_auto(value):
@@ -98,7 +99,7 @@ def generate_tf_dic(path_text):
         lines = f.readlines()
         vocab_dict = {l.strip(): (i) for i, l in enumerate(lines)}
         pad_word=vocab_dict.get(pad_word)
-        OOV=len(vocab_dict)
+        OOV=vocab_dict.get(OOV)
 
     with open(FLAGS.path_author, 'r', encoding='utf8') as f:
         lines = f.readlines()
