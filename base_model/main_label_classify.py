@@ -90,15 +90,21 @@ def input_fn(filenames, config, shuffle_buffer_size):
     dataset = dataset.apply(tf.data.experimental.map_and_batch(map_func=parser, batch_size=FLAGS.batch_size,
                                                           num_parallel_calls=FLAGS.num_parallel_calls))
     return dataset
-
+def id_word_map():
+    with open(FLAGS.word_path, 'r', encoding='utf8') as f:
+        lines = f.readlines()
+        vocab_dict = {str(i):l.strip() for i, l in enumerate(lines)}
+    return vocab_dict
 
 if __name__ == '__main__':
     start = time.time()
     # Loads parameters from json file
+    vocab_dict=id_word_map()
     with open(FLAGS.params_file) as f:
         config = json.load(f)
     config["train_size"]=256
     config["max_length"]=200
+    config["id_word"]=vocab_dict
     if config["train_size"] < FLAGS.shuffle_buffer_size:
         FLAGS.shuffle_buffer_size = config["train_size"]
 
