@@ -76,5 +76,4 @@ if __name__ == '__main__':
     print('author num {}'.format(len(author_sort)))
     save_author_to_txt_file(author_sort, os.path.join(args.data_dir, 'textcnn_author_sort'))
     print("- done.")
-
     os.system("head {}".format( os.path.join(args.data_dir, 'textcnn_author_sort')))
