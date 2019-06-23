@@ -16,6 +16,7 @@ flags.DEFINE_string("OOV", '1', "used for pad sentence")
 flags.DEFINE_string("path_vocab", "/data/tanggp/youtube8m/textcnn_words.txt", "used for word index")
 flags.DEFINE_string("path_author",  os.path.join("/data/tanggp/youtube8m/", 'textcnn_author_sort'), "Directory containing the dataset")
 flags.DEFINE_string("path_label",  os.path.join("/data/tanggp/youtube8m/", 'textcnn_label_sort'), "Directory containing the dataset")
+flags.DEFINE_string("path_categories",  os.path.join("/data/tanggp/youtube8m/", 'textcnn_categories_sort'), "Directory containing the dataset")
 FLAGS = flags.FLAGS
 
 sentence_max_len = 200
@@ -49,15 +50,20 @@ def feature_auto(value):
         return tf.train.Feature(float_list=tf.train.FloatList(value=[value]))
 
 
-def parse_line_dict(record,vocab_dict,author_dict,label_dict):
+def parse_line_dict(record,vocab_dict,author_dict,label_dict,categories_dict):
     tokens=per_line(record)
     tokens=tokens.split()
     text = [vocab_dict.get(r,OOV) for r in tokens]
     record=json.loads(record)
     label=record.get("label")
     author=record.get("source_user")
+    try:
+        categories =record.get("categories", ["no"])[0].lower()
+    except:
+        categories ="no"
 
-    return [text, label_dict.get(label),author_dict.get(author,len(author_dict))]
+
+    return [text, label_dict.get(label),author_dict.get(author,len(author_dict)),categories_dict.get(categories)]
 
 
 def per_thouds_lines_dict(result_lines, path_text, count,flag_name=''):
@@ -68,11 +74,12 @@ def per_thouds_lines_dict(result_lines, path_text, count,flag_name=''):
         text=rl[0]
         label=rl[1]
         author=rl[2]
+        categories=rl[3]
         if len(text) >= sentence_max_len:
             text = text[0: sentence_max_len]
         else:
             text += [pad_word] * (sentence_max_len - len(text))
-        g={"text":text,"label":label,"author":author}
+        g={"text":text,"label":label,"author":author,"categories":categories}
         tf_lines.append(g)
         # if rl_num>1 and rl_num%10000==0:
         #     flag_name=str(rl_num)
@@ -98,6 +105,10 @@ def generate_tf_dic(path_text):
         lines = f.readlines()
         label_dict = {l.strip().split("\x01\t")[0]: i for i, l in enumerate(lines)}
 
+    with open(FLAGS.path_label, 'r', encoding='utf8') as f:
+        lines = f.readlines()
+        categories_dict = {l.strip().split("\x01\t")[0]: i for i, l in enumerate(lines)}
+
     result_lines = []
     count = 0
     with open(path_text, 'r', encoding='utf8') as f:
@@ -105,7 +116,7 @@ def generate_tf_dic(path_text):
         random.shuffle(lines)
         for line in lines:
             count+=1
-            result_lines.append(parse_line_dict(line,vocab_dict,author_dict,label_dict))
+            result_lines.append(parse_line_dict(line,vocab_dict,author_dict,label_dict,categories_dict))
             if count>0 and count % 50000 == 0:
                 print(count)
                 per_thouds_lines_dict(result_lines, path_text, count)
@@ -131,10 +142,12 @@ def write_tfrecords(tf_lines, path_text, count):
         text = data["text"]
         label = data["label"]
         author=data["author"]
+        categories=data["categories"]
         example = tf.train.Example(features=tf.train.Features(feature={
             'text': feature_auto(list(text)),
             'label': feature_auto(int(label)),
-            'author': feature_auto(int(author))
+            'author': feature_auto(int(author)),
+            "categories": feature_auto(int(categories)),
         }))
 
         writer.write(example.SerializeToString())
