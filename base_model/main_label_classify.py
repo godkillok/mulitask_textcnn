@@ -34,14 +34,14 @@ flags.DEFINE_integer("num_parallel_calls", 4, "Num of cpu cores")
 flags.DEFINE_integer("num_parallel_readers", 4, "Number of files read at the same time")
 flags.DEFINE_float("learning_rate", 0.001, "Initial learning rate")
 flags.DEFINE_integer("steps_check", 500, "steps per checkpoint")
-flags.DEFINE_string("train_file", "/data/tanggp/youtube8m/*.tfrecords", "train file pattern")
-flags.DEFINE_string("valid_file", "/data/tanggp/youtube8m/*.tfrecords", "evalue file pattern")
-#flags.DEFINE_string("emb_file", None, "Path for pre_trained embedding")
-flags.DEFINE_string("emb_file", "./pretrained_vector/glove.twitter.27B.200d.txt", "Path for pre_trained embedding")
-flags.DEFINE_string("params_file", "./baseline_data/dataset_params.json", "parameters file")
-flags.DEFINE_string("word_path", "./baseline_data/words.txt", "word vocabulary file")
-flags.DEFINE_string("model_dir", "./baseline_model", "Path to save model")
-flags.DEFINE_string("result_file", "./baseline_data/result.txt", "Path to save predict result")
+flags.DEFINE_string("train_file", "/data/tanggp/youtube8m/text_cnn_txt_train_*", "train file pattern")
+flags.DEFINE_string("valid_file", "/data/tanggp/youtube8m/text_cnn_txt_golden_*", "evalue file pattern")
+flags.DEFINE_string("emb_file", None, "Path for pre_trained embedding")
+#flags.DEFINE_string("emb_file", "", "Path for pre_trained embedding")
+flags.DEFINE_string("params_file", "/data/tanggp/youtube8m/textcnn_dataset_params.json", "parameters file")
+flags.DEFINE_string("word_path", "/data/tanggp/youtube8m/textcnn_words.txt", "word vocabulary file")
+flags.DEFINE_string("model_dir", "/data/tanggp/textcnn_baseline_model", "Path to save model")
+flags.DEFINE_string("result_file", "/data/tanggp/textcnn_baseline_model/base_result.txt", "Path to save predict result")
 flags.DEFINE_float("warmup_proportion", 0.1, "Proportion of training to perform linear learning rate warmup for.")
 # configurations for the model
 flags.DEFINE_float("dropout_prob", 0.2, "Dropout rate")  # 以0.2的概率drop out
@@ -74,15 +74,12 @@ def input_fn(filenames, config, shuffle_buffer_size):
     def parser(record):
         keys_to_features = {
             "sentence_ids": tf.FixedLenFeature([config['max_length']], tf.int64),
-            "author_id": tf.FixedLenFeature([1], tf.int64),
-            "category_ids": tf.FixedLenFeature([2], tf.int64),
-            "keyword_ids": tf.FixedLenFeature([config['max_keyword_length']], tf.int64),
-            "keyword_label_ids": tf.FixedLenFeature([config['max_keyword_length']], tf.int64),
-            "label_id": tf.FixedLenFeature([1], tf.int64)}
+            "categories": tf.FixedLenFeature([], tf.int64),
+            "author": tf.FixedLenFeature([], tf.int64),
+            "label": tf.FixedLenFeature([], tf.int64)}
         parsed = tf.parse_single_example(record, keys_to_features)
-        return {"sentence_ids": parsed['sentence_ids'], "author_id": parsed['author_id'],
-                "category_ids": parsed['category_ids'], "keyword_ids": parsed['keyword_ids'],
-                "keyword_label_ids": parsed['keyword_label_ids'], 'label_id':parsed['label_id']}
+        return {"sentence_ids": parsed['sentence_ids'], "author": parsed['author'],
+                "categories": parsed['category_ids'], 'label':parsed['label']}
 
     # Load txt file, one example per line
     files = tf.data.Dataset.list_files(filenames)  # A dataset of all files matching a pattern.
@@ -100,6 +97,8 @@ if __name__ == '__main__':
     # Loads parameters from json file
     with open(FLAGS.params_file) as f:
         config = json.load(f)
+    config["train_size"]=256
+    config["max_length"]=200
     if config["train_size"] < FLAGS.shuffle_buffer_size:
         FLAGS.shuffle_buffer_size = config["train_size"]
 
@@ -116,11 +115,6 @@ if __name__ == '__main__':
         model_dir=model_dir,
         config=run_config,
         params={
-            'label_size': config["label_size"],
-            'author_size': config["author_size"],
-            'category_size': config["category_size"],
-            'keyword_size': config["keyword_size"],
-            'id_word': config["id_word"],
             'max_length': config["max_length"],
             'emb_file': FLAGS.emb_file,
             'learning_rate': FLAGS.learning_rate,
