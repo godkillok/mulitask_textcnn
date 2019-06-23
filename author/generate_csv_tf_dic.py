@@ -138,12 +138,14 @@ def write_tfrecords(tf_lines, path_text, count):
 
 
 def main():
-    s3_input = FLAGS.data_dir
-    for root, dirs, files in os.walk(s3_input):
-        for file in files:
-            # if file.endswith("ain_set.csv"):
-            #     print('start to process file {}'.format(file))
-            generate_tf_dic(os.path.join(root, file))
+    generate_tf_dic(os.path.join(FLAGS.data_dir, 'txt_train'))
+    generate_tf_dic(os.path.join(FLAGS.data_dir, 'txt_golden'))
+    # s3_input = FLAGS.data_dir
+    # for root, dirs, files in os.walk(s3_input):
+    #     for file in files:
+    #         # if file.endswith("ain_set.csv"):
+    #         #     print('start to process file {}'.format(file))
+    #         generate_tf_dic(os.path.join(root, file))
     # os.system('cd {}'.format(s3_input))
     # os.system('find . -name "*" -type f -size 0c | xargs -n 1 rm -f')
 

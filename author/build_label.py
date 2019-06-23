@@ -69,7 +69,7 @@ if __name__ == '__main__':
     print("Building labels...")
     labels = []
     update_label(os.path.join(args.data_dir, 'txt_train'), labels)
-    update_label(os.path.join(args.data_dir, 'txt_valid'), labels)
+    update_label(os.path.join(args.data_dir, 'txt_golden'), labels)
 
     labels_sort=sorted(Counter(labels).items(), key=lambda x: x[1], reverse=True)
     print('labels num {}'.format(len(labels_sort)))

@@ -69,7 +69,7 @@ if __name__ == '__main__':
     print("Building author...")
     author = []
     update_author(os.path.join(args.data_dir, 'txt_train'), author)
-    update_author(os.path.join(args.data_dir, 'txt_valid'), author)
+    update_author(os.path.join(args.data_dir, 'txt_golden'), author)
 
     author_sort=sorted(Counter(author).items(), key=lambda x: x[1], reverse=True)
     print('author num {}'.format(len(author_sort)))
