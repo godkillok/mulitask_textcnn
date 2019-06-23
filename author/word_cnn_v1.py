@@ -16,8 +16,8 @@ import json
 # sys.setdefaultencoding("utf-8")
 #model_dir2 is the good one embedding size 1281
 flags = tf.app.flags
-flags.DEFINE_string("model_dir", "/data/tanggp/text_cnns/data/model1/", "Base directory for the model.")
-flags.DEFINE_string("train_file_pattern", "/data/tanggp/text_cnns/data/text_cnn_txt_train_*", "train file pattern")
+flags.DEFINE_string("model_dir", "/data/tanggp/text_cnn_youtube8m/", "Base directory for the model.")
+flags.DEFINE_string("train_file_pattern", "/data/tanggp/youtube8m/text_cnn_txt_train_*", "train file pattern")
 flags.DEFINE_string("eval_file_pattern", "/data/tanggp/youtube8m/text_cnn_txt_golden_*", "evalue file pattern")
 # flags.DEFINE_string("train_file_pattern", "s3://shareit.tmp.ap-southeast-1/NeverDelete/tanggp/tfrecord/train*.tfrecords", "train file pattern")
 # flags.DEFINE_string("eval_file_pattern", "s3://shareit.tmp.ap-southeast-1/NeverDelete/tanggp/tfrecord/train*.tfrecords", "evalue file pattern")
@@ -231,7 +231,7 @@ def my_model(features, labels, mode, params):
 
 def main(unused_argv):
     # Load the parameters from the dataset, that gives the size etc. into params
-    json_path = os.path.join(FLAGS.data_dir, 'dataset_params.json')
+    json_path = os.path.join(FLAGS.data_dir, 'textcnn_dataset_params.json')
     assert os.path.isfile(json_path), "No json file found at {}, run build_vocab.py".format(json_path)
     # Loads parameters from json file
     with open(json_path) as f:
