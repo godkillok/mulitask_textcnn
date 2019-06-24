@@ -60,7 +60,7 @@ tf.logging.set_verbosity(logging.INFO)
 
 timestamp = time.strftime("%m.%d.%H.%M", time.localtime())
 if FLAGS.do_train:
-    model_dir = os.path.join(FLAGS.model_dir, timestamp)
+    model_dir = os.path.join(FLAGS.model_dir)
     with open('model_dir.pkl', 'wb') as f:
         pickle.dump(model_dir, f)
 else:
