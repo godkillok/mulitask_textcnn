@@ -95,7 +95,7 @@ def id_word_map():
 
 if __name__ == '__main__':
     start = time.time()
-    # Loads parameters from json file
+    # Loads parameters from json f2ile
     vocab_dict=id_word_map()
     with open(FLAGS.params_file) as f:
         config = json.load(f)
@@ -153,7 +153,7 @@ if __name__ == '__main__':
         input_fn_for_eval = lambda: input_fn(FLAGS.valid_file, config, 0)
         best_copier = BestCheckpointCopier(name='best',  # directory within model directory to copy checkpoints to
                 checkpoints_to_keep=1,  # number of checkpoints to keep
-                score_metric='accuracy',  # metric to use to determine "best"
+                score_metric='acc',  # metric to use to determine "best"
                 compare_fn=lambda x, y: x.score > y.score,
                 sort_reverse=True)
         eval_spec = tf.estimator.EvalSpec(input_fn=input_fn_for_eval, throttle_secs=10, exporters=best_copier)
