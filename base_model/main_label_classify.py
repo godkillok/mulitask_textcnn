@@ -166,7 +166,7 @@ if __name__ == '__main__':
         best_dir = model_dir + '/best'
 
         path_label=os.path.join(FLAGS.data_dir, 'textcnn_label_sort')
-        with open(FLAGS.path_label, 'r', encoding='utf8') as f:
+        with open(path_label, 'r', encoding='utf8') as f:
             lines = f.readlines()
             id2label = { i:l.strip().split("\x01\t")[0] for i, l in enumerate(lines)}
 
