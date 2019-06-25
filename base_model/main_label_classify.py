@@ -13,7 +13,7 @@ from logger import get_logger
 log_file_name = os.path.basename(__file__).split('.', 1)[0] + '.log'
 # Save params
 
-#os.environ["CUDA_VISIBLE_DEVICES"] = "0"
+os.environ["CUDA_VISIBLE_DEVICES"] = "7"
 # 当日志文件大小小于5M时，则以追加模式写
 if os.path.exists(log_file_name) is False or os.path.getsize(log_file_name) / 1024 / 1024 < 5:
     logger = get_logger(log_file_name, mode='a')
@@ -56,7 +56,7 @@ FLAGS = tf.app.flags.FLAGS
 assert 0 <= FLAGS.dropout_prob < 1, "dropout_prob rate between 0 and 1"
 assert FLAGS.learning_rate > 0, "learning rate must larger than zero"
 
-os.environ['TF_CPP_MIN_LOG_LEVEL'] = '7'  # 只显示warning 和 error
+os.environ['TF_CPP_MIN_LOG_LEVEL'] = '2'  # 只显示warning 和 error
 tf.logging.set_verbosity(logging.INFO)
 
 
