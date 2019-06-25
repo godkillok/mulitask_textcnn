@@ -110,7 +110,7 @@ if __name__ == '__main__':
     train_steps = int(config["train_size"] / FLAGS.batch_size * FLAGS.num_epoches)
     logger.info('The number of training steps is {}'.format(train_steps))
     session_config = tf.ConfigProto(log_device_placement=True)
-    session_config.gpu_options.per_process_gpu_memory_fraction = 0.7
+    session_config.gpu_options.per_process_gpu_memory_fraction = 0.95
     session_config.gpu_options.allow_growth = True
     run_config = tf.estimator.RunConfig(save_checkpoints_steps=FLAGS.steps_check, session_config=session_config, keep_checkpoint_max=3)
     num_warmup_steps = int(train_steps * FLAGS.warmup_proportion)
