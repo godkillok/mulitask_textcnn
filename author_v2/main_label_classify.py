@@ -27,8 +27,8 @@ flags.DEFINE_bool("do_predict", True, "Whether to run the model in inference mod
 flags.DEFINE_integer("batch_size", 256, "batch size")
 flags.DEFINE_string("data_dir", '/data/tanggp/youtube8m', "The input datadir.")
 flags.DEFINE_integer("shuffle_buffer_size", 20000, "dataset shuffle buffer size")  # 只影响取数据的随机性
-flags.DEFINE_integer("num_parallel_calls", 4, "Num of cpu cores")
-flags.DEFINE_integer("num_parallel_readers", 4, "Number of files read at the same time")
+flags.DEFINE_integer("num_parallel_calls", 40, "Num of cpu cores")
+flags.DEFINE_integer("num_parallel_readers", 40, "Number of files read at the same time")
 flags.DEFINE_float("learning_rate", 0.001, "Initial learning rate")
 flags.DEFINE_integer("steps_check", 500, "steps per checkpoint")
 flags.DEFINE_string("train_file", "/data/tanggp/youtube8m/text_cnn_txt_train_*", "train file pattern")
@@ -99,10 +99,11 @@ if __name__ == '__main__':
     vocab_dict=id_word_map()
     with open(FLAGS.params_file) as f:
         config = json.load(f)
-    config["train_size"]=256
+    config["train_size"]=3285943
     config["max_length"]=200
     config["id_word"]=vocab_dict
     config["word_dim"]=128
+
     if config["train_size"] < FLAGS.shuffle_buffer_size:
         FLAGS.shuffle_buffer_size = config["train_size"]
 
@@ -135,6 +136,8 @@ if __name__ == '__main__':
             'train_steps': train_steps,
             'summary_dir':model_dir,
             "label_size":20,
+            "author_size":2178640,
+            "categories_size": 20,
             'use_focal_loss':False,
             'use_author_feature': False,
             'use_category_feature': False,
