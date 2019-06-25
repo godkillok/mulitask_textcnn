@@ -13,7 +13,7 @@ from logger import get_logger
 log_file_name = os.path.basename(__file__).split('.', 1)[0] + '.log'
 # Save params
 # 当日志文件大小小于5M时，则以追加模式写
-# os.environ["CUDA_VISIBLE_DEVICES"] = "2"
+os.environ["CUDA_VISIBLE_DEVICES"] = "3"
 
 if os.path.exists(log_file_name) is False or os.path.getsize(log_file_name) / 1024 / 1024 < 5:
     logger = get_logger(log_file_name, mode='a')
@@ -29,7 +29,7 @@ flags.DEFINE_string("data_dir", '/data/tanggp/youtube8m', "The input datadir.")
 flags.DEFINE_integer("shuffle_buffer_size", 20000, "dataset shuffle buffer size")  # 只影响取数据的随机性
 flags.DEFINE_integer("num_parallel_calls", 40, "Num of cpu cores")
 flags.DEFINE_integer("num_parallel_readers", 40, "Number of files read at the same time")
-flags.DEFINE_float("learning_rate", 0.001, "Initial learning rate")
+flags.DEFINE_float("learning_rate", 0.01, "Initial learning rate")
 flags.DEFINE_integer("steps_check", 500, "steps per checkpoint")
 flags.DEFINE_string("train_file", "/data/tanggp/youtube8m/text_cnn_txt_train_*", "train file pattern")
 flags.DEFINE_string("valid_file", "/data/tanggp/youtube8m/text_cnn_txt_golden_*", "evalue file pattern")
