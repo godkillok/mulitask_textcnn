@@ -7,7 +7,7 @@ import tensorflow as tf
 from train_model import model_fn
 import json
 import logging
-from best_checkpoint_copier import BestCheckpointCopier
+# from best_checkpoint_copier import BestCheckpointCopier
 from sklearn.metrics import classification_report, confusion_matrix
 from logger import get_logger
 log_file_name = os.path.basename(__file__).split('.', 1)[0] + '.log'
@@ -154,12 +154,12 @@ if __name__ == '__main__':
         input_fn_for_train = lambda: input_fn(FLAGS.train_file, config, FLAGS.shuffle_buffer_size)
         train_spec = tf.estimator.TrainSpec(input_fn=input_fn_for_train, max_steps=train_steps)
         input_fn_for_eval = lambda: input_fn(FLAGS.valid_file, config, 0)
-        best_copier = BestCheckpointCopier(name='best',  # directory within model directory to copy checkpoints to
-                checkpoints_to_keep=1,  # number of checkpoints to keep
-                score_metric='acc',  # metric to use to determine "best"
-                compare_fn=lambda x, y: x.score > y.score,
-                sort_reverse=True)
-        eval_spec = tf.estimator.EvalSpec(input_fn=input_fn_for_eval, throttle_secs=1200, exporters=best_copier)
+        # best_copier = BestCheckpointCopier(name='best',  # directory within model directory to copy checkpoints to
+        #         checkpoints_to_keep=1,  # number of checkpoints to keep
+        #         score_metric='acc',  # metric to use to determine "best"
+        #         compare_fn=lambda x, y: x.score > y.score,
+        #         sort_reverse=True)
+        eval_spec = tf.estimator.EvalSpec(input_fn=input_fn_for_eval, throttle_secs=1200) #, exporters=best_copier
         tf.estimator.train_and_evaluate(estimator, train_spec, eval_spec)
         logger.info("Switch to the current directory and Run the command line:" \
                     "tensorboard --logdir=%s" \
