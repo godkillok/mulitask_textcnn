@@ -125,9 +125,9 @@ class CnnModel(Model):
             l2_loss += tf.nn.l2_loss(output_w) + tf.nn.l2_loss(output_b)
 
         with tf.variable_scope("author"):
-            output_w = tf.get_variable("output_w", shape=[hidden_size, self.config['label_size']])
-            output_b =  self.initialize_bias("output_b", shape=self.config['label_size'])
-            author_logits = tf.nn.xw_plus_b(output_layer, output_w, output_b)
+            # output_w = tf.get_variable("output_w", shape=[hidden_size, self.config['label_size']])
+            # output_b =  self.initialize_bias("output_b", shape=self.config['label_size'])
+            # author_logits = tf.nn.xw_plus_b(output_layer, output_w, output_b)
 
             # Construct the variables for the NCE loss
             nce_weights = tf.Variable(
