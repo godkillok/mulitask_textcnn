@@ -136,7 +136,7 @@ if __name__ == '__main__':
             'train_steps': train_steps,
             'summary_dir':model_dir,
             "label_size":20,
-            "author_size":2178640,
+            "author_size":1500001,
             "categories_size": 20,
             'use_focal_loss':False,
             'use_author_feature': False,
