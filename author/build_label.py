@@ -70,7 +70,7 @@ if __name__ == '__main__':
     labels = []
     update_label(os.path.join(args.data_dir, 'txt_train'), labels)
     update_label(os.path.join(args.data_dir, 'txt_golden'), labels)
-    update_label(os.path.join(args.data_dir, 'txt_valid'), labels)
+    #update_label(os.path.join(args.data_dir, 'txt_valid'), labels)
     labels_sort=sorted(Counter(labels).items(), key=lambda x: x[1], reverse=True)
     print('labels num {}'.format(len(labels_sort)))
     save_label_to_txt_file(labels_sort, os.path.join(args.data_dir, 'textcnn_label_sort'))

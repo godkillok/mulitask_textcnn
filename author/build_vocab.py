@@ -64,7 +64,7 @@ if __name__ == '__main__':
     word_lenth=[]
     size_train_sentences = update_vocab(os.path.join(args.data_dir, 'txt_train'), words,word_lenth)
     size_test_sentences = update_vocab(os.path.join(args.data_dir, 'txt_golden'), words,word_lenth)
-    size_test_sentences = update_vocab(os.path.join(args.data_dir, 'txt_valid'), words, word_lenth)
+    #size_test_sentences = update_vocab(os.path.join(args.data_dir, 'txt_valid'), words, word_lenth)
     print("- done.")
     word_lenth_count=Counter(word_lenth)
     for i in word_lenth_count.items():
