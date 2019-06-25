@@ -117,7 +117,7 @@ class CnnModel(Model):
         output_layer = gelu(output_layer)
         output_layer = self.dropout(output_layer, self.config['dropout_prob'])
         hidden_size = output_layer.shape[-1].value
-        print("======================================================================================={}".format(hidden_size.shape))
+        print("======================================================================================={}".format(output_layer.shape))
         with tf.variable_scope("output"):
             output_w = tf.get_variable("output_w", shape=[hidden_size, self.config['label_size']])
             output_b =  self.initialize_bias("output_b", shape=self.config['label_size'])
