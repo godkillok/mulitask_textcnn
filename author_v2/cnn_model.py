@@ -35,7 +35,7 @@ class CnnModel(Model):
         logits, predict_label_ids, l2_loss = self.build_cnn(embedded_words_expanded)
         return logits, predict_label_ids, l2_loss
     #build_loss(self, labels, logits, l2_loss=0.0)
-    def build_loss(self, labels, logits, l2_loss=0):
+    def build_loss(self, labels, logits, l2_loss=0,author_loss=0):
         """Build loss function.
         args:
           labels: Actual label.
@@ -49,7 +49,7 @@ class CnnModel(Model):
             else:
                 losses = tf.nn.sparse_softmax_cross_entropy_with_logits(labels=labels, logits=logits)
                 loss = tf.reduce_mean(losses) + self.config['l2_reg_lambda']*l2_loss
-        return loss
+        return loss+author_loss
 
     def build_cnn(self, input_tensor):
         pooled_outputs = []
@@ -123,6 +123,30 @@ class CnnModel(Model):
             logits = tf.nn.xw_plus_b(output_layer, output_w, output_b)
             l2_loss += tf.nn.l2_loss(output_w) + tf.nn.l2_loss(output_b)
 
+        with tf.variable_scope("author"):
+            output_w = tf.get_variable("output_w", shape=[hidden_size, self.config['label_size']])
+            output_b =  self.initialize_bias("output_b", shape=self.config['label_size'])
+            author_logits = tf.nn.xw_plus_b(output_layer, output_w, output_b)
+
+            # Construct the variables for the NCE loss
+            nce_weights = tf.Variable(
+                tf.truncated_normal([self.config['author_size'], hidden_size],
+                                    stddev=1.0 / math.sqrt(hidden_size)))
+            nce_biases = tf.Variable(tf.zeros([self.config['author_size']]))
+
+            # Compute the average NCE loss for the batch.
+            # tf.nce_loss automatically draws a new sample of the negative labels each
+            # time we evaluate the loss.
+
+            author_loss = tf.reduce_mean(
+                tf.nn.nce_loss(weights=nce_weights,
+                               biases=nce_biases,
+                               labels=self.author_id,
+                               inputs=output_layer,
+                               num_sampled=10,
+                               num_classes=self.config['author_size']))
+
+
         predict_label_ids = tf.argmax(logits, axis=1, name="predict_label_id")  # 预测结果
-        return logits, predict_label_ids, l2_loss
+        return logits, predict_label_ids, l2_loss,author_loss
 
