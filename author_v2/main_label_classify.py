@@ -159,7 +159,7 @@ if __name__ == '__main__':
                 score_metric='acc',  # metric to use to determine "best"
                 compare_fn=lambda x, y: x.score > y.score,
                 sort_reverse=True)
-        eval_spec = tf.estimator.EvalSpec(input_fn=input_fn_for_eval, throttle_secs=10, exporters=best_copier)
+        eval_spec = tf.estimator.EvalSpec(input_fn=input_fn_for_eval, throttle_secs=1200, exporters=best_copier)
         tf.estimator.train_and_evaluate(estimator, train_spec, eval_spec)
         logger.info("Switch to the current directory and Run the command line:" \
                     "tensorboard --logdir=%s" \
