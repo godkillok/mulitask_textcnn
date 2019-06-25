@@ -56,7 +56,7 @@ FLAGS = tf.app.flags.FLAGS
 assert 0 <= FLAGS.dropout_prob < 1, "dropout_prob rate between 0 and 1"
 assert FLAGS.learning_rate > 0, "learning rate must larger than zero"
 
-os.environ['TF_CPP_MIN_LOG_LEVEL'] = '2'  # 只显示warning 和 error
+os.environ['TF_CPP_MIN_LOG_LEVEL'] = '5'  # 只显示warning 和 error
 tf.logging.set_verbosity(logging.INFO)
 
 
