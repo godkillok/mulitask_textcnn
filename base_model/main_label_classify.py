@@ -22,7 +22,7 @@ else:
     logger = get_logger(log_file_name)
 
 flags = tf.app.flags
-# configurations for training
+# configurations for training1
 flags.DEFINE_bool("do_train", True, "Whether to run training.")
 flags.DEFINE_bool("do_predict", True, "Whether to run the model in inference mode on the test set.")
 flags.DEFINE_integer("batch_size", 256, "batch size")
@@ -33,7 +33,8 @@ flags.DEFINE_integer("num_parallel_readers", 40, "Number of files read at the sa
 flags.DEFINE_float("learning_rate", 0.001, "Initial learning rate")
 flags.DEFINE_integer("steps_check", 500, "steps per checkpoint")
 flags.DEFINE_string("train_file", "/data/tanggp/youtube8m/text_cnn_txt_train_*", "train file pattern")
-flags.DEFINE_string("valid_file", "/data/tanggp/youtube8m/text_cnn_txt_golden_*", "evalue file pattern")
+flags.DEFINE_string("valid_file", "/data/tanggp/youtube8m/text_cnn_txt_train_*", "train file pattern")
+#flags.DEFINE_string("valid_file", "/data/tanggp/youtube8m/text_cnn_txt_golden_*", "evalue file pattern")
 flags.DEFINE_string("emb_file", None, "Path for pre_trained embedding")
 #flags.DEFINE_string("emb_file", "", "Path for pre_trained embedding")
 flags.DEFINE_string("params_file", "/data/tanggp/youtube8m/textcnn_dataset_params.json", "parameters file")
