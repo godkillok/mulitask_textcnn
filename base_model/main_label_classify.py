@@ -12,14 +12,15 @@ from sklearn.metrics import classification_report, confusion_matrix
 from logger import get_logger
 log_file_name = os.path.basename(__file__).split('.', 1)[0] + '.log'
 # Save params
-# 当日志文件大小小于5M时，则以追加模式写
-#os.environ["CUDA_VISIBLE_DEVICES"] = "0"
 
+#os.environ["CUDA_VISIBLE_DEVICES"] = "0"
+# 当日志文件大小小于5M时，则以追加模式写
 if os.path.exists(log_file_name) is False or os.path.getsize(log_file_name) / 1024 / 1024 < 5:
     logger = get_logger(log_file_name, mode='a')
 else:
     # 否则删除以前的日志
     logger = get_logger(log_file_name)
+
 flags = tf.app.flags
 # configurations for training
 flags.DEFINE_bool("do_train", True, "Whether to run training.")
