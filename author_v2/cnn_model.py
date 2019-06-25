@@ -32,8 +32,8 @@ class CnnModel(Model):
                          word_embedding_name="embedding_table", emb_path=self.config['emb_file'])
         self.variable_summaries('embedding', embedding)
         embedded_words_expanded = self. expand_dims(embedding, -1)
-        logits, predict_label_ids, l2_loss = self.build_cnn(embedded_words_expanded)
-        return logits, predict_label_ids, l2_loss
+        logits, predict_label_ids, l2_loss,author_loss = self.build_cnn(embedded_words_expanded)
+        return logits, predict_label_ids, l2_loss,author_loss
     #build_loss(self, labels, logits, l2_loss=0.0)
     def build_loss(self, labels, logits, l2_loss=0,author_loss=0):
         """Build loss function.
