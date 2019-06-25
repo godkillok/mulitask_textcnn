@@ -102,7 +102,7 @@ def ini():
         print("pad_word {},OOV {}".format(pad_word,OOV))
     with open(FLAGS.path_author, 'r', encoding='utf8') as f:
         lines = f.readlines()
-        author_dict = {l.strip().split("\x01\t")[0]: i for i, l in enumerate(lines)}
+        author_dict = {l.strip().split("\x01\t")[0]: i for i, l in enumerate(lines) if i<1000000}
 
     with open(FLAGS.path_label, 'r', encoding='utf8') as f:
         lines = f.readlines()
