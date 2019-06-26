@@ -44,6 +44,4 @@ def focal_loss_softmax(labels, logits, gamma=2):
     alpha=tf.constant(value=alpha1, dtype=tf.float32)
     L1=-alpha*labels*((1-y_pred)**gamma)*tf.log(y_pred)
     loss=tf.reduce_sum(L1,axis=1)
-    # loss = -labels * ((1 - y_pred) ** gamma) * tf.log(y_pred)
-    # loss = tf.reduce_sum(loss, axis=1)
     return loss
