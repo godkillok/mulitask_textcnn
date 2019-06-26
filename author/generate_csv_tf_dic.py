@@ -61,9 +61,16 @@ def parse_line_dict(record,vocab_dict,author_dict,label_dict,categories_dict):
         categories =record.get("categories", ["no"])[0].lower()
     except:
         categories ="no"
+    try:
+        au=author_dict.get(author)
+        if au is None:
+            au=author_dict.get('{}_{}'.format(label,categories))
+        if au is None:
+            au = len(author_dict)
+    except:
+        au=len(author_dict)
 
-
-    return [text, label_dict.get(label),author_dict.get(author,len(author_dict)),categories_dict.get(categories,len(categories))]
+    return [text, label_dict.get(label),au,categories_dict.get(categories,len(categories))]
 
 
 def per_thouds_lines_dict(result_lines, path_text, count,flag_name=''):
@@ -100,9 +107,7 @@ def ini():
         pad_word=vocab_dict.get(pad_word)
         OOV=vocab_dict.get(OOV)
         print("pad_word {},OOV {}".format(pad_word,OOV))
-    with open(FLAGS.path_author, 'r', encoding='utf8') as f:
-        lines = f.readlines()
-        author_dict = {l.strip().split("\x01\t")[0]: i for i, l in enumerate(lines) if i<1500000}
+
 
     with open(FLAGS.path_label, 'r', encoding='utf8') as f:
         lines = f.readlines()
@@ -111,6 +116,20 @@ def ini():
     with open(FLAGS.path_label, 'r', encoding='utf8') as f:
         lines = f.readlines()
         categories_dict = {l.strip().split("\x01\t")[0]: i for i, l in enumerate(lines)}
+
+    with open(FLAGS.path_author, 'r', encoding='utf8') as f:
+        lines = f.readlines()
+        author_dict = {l.strip().split("\x01\t")[0]: i for i, l in enumerate(lines) if i<1500000}
+
+    with open(FLAGS.path_author, 'a', encoding='utf8') as f:
+        for la in label_dict.keys():
+            for ca in categories_dict.keys():
+                new_au='{}_{}'.format(la, ca)
+                if new_au not in author_dict:
+                    f.writelines(new_au+'\n')
+                    author_dict[new_au]=len(author_dict)
+
+
     return vocab_dict,author_dict,label_dict,categories_dict
 def generate_tf_dic(path_text,vocab_dict,author_dict,label_dict,categories_dict):
 
