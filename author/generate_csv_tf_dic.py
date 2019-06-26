@@ -119,7 +119,12 @@ def ini():
 
     with open(FLAGS.path_author, 'r', encoding='utf8') as f:
         lines = f.readlines()
-        author_dict = {l.strip().split("\x01\t")[0]: i for i, l in enumerate(lines) if int(l.strip().split("\x01\t")[1])>10}
+        i=0
+        author_dict={}
+        for  l in lines:
+            if int(l.strip().split("\x01\t")[1]) > 10:
+                author_dict[l.strip().split("\x01\t")[0]]=i
+                i+=1
 
     print("before new is {} all is {}".format(len(author_dict),len(lines)))
     with open(FLAGS.path_author, 'a', encoding='utf8') as f:
@@ -130,7 +135,7 @@ def ini():
                     f.writelines('{}\x01\t{}\n'.format(new_au,100))
                     author_dict[new_au]=len(author_dict)
                 else:
-                    print(author_dict[new_au])
+                    print((new_au,author_dict[new_au]))
     print("after is {}".format(len(author_dict)))
 
     return vocab_dict,author_dict,label_dict,categories_dict
