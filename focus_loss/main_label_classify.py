@@ -25,7 +25,7 @@ flags = tf.app.flags
 # configurations for training1
 flags.DEFINE_bool("do_train", True, "Whether to run training.")
 flags.DEFINE_bool("do_predict", True, "Whether to run the model in inference mode on the test set.")
-flags.DEFINE_integer("batch_size", 256, "batch size")
+flags.DEFINE_integer("batch_size", 512, "batch size")
 flags.DEFINE_string("data_dir", '/data/tanggp/youtube8m', "The input datadir.")
 flags.DEFINE_integer("shuffle_buffer_size", 20000, "dataset shuffle buffer size")  # 只影响取数据的随机性
 flags.DEFINE_integer("num_parallel_calls", 40, "Num of cpu cores")
