@@ -129,6 +129,8 @@ def ini():
                 if new_au not in author_dict:
                     f.writelines('{}\x01\t{}\n'.format(new_au,100))
                     author_dict[new_au]=len(author_dict)
+                else:
+                    print(author_dict[new_au])
     print("after is {}".format(len(author_dict)))
 
     return vocab_dict,author_dict,label_dict,categories_dict
