@@ -120,13 +120,14 @@ def ini():
     with open(FLAGS.path_author, 'r', encoding='utf8') as f:
         lines = f.readlines()
         author_dict = {l.strip().split("\x01\t")[0]: i for i, l in enumerate(lines) if int(l.strip().split("\x01\t")[1])>10}
+
     print("before new is {} all is {}".format(len(author_dict),len(lines)))
     with open(FLAGS.path_author, 'a', encoding='utf8') as f:
         for la in label_dict.keys():
             for ca in categories_dict.keys():
                 new_au='{}_{}'.format(la, ca)
                 if new_au not in author_dict:
-                    f.writelines(new_au+'\n')
+                    f.writelines('{}\x01\t{}\n'.format(new_au,100))
                     author_dict[new_au]=len(author_dict)
     print("after is {}".format(len(author_dict)))
 
