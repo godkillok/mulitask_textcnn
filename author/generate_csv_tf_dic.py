@@ -154,7 +154,7 @@ def generate_tf_dic(path_text,vocab_dict,author_dict,label_dict,categories_dict)
 def write_tfrecords(tf_lines, path_text, count):
     (root_path, output_filename) = os.path.split(path_text)
     output_filename = output_filename.split('.')[0]
-    output_filename='text_cnn_'+output_filename
+    output_filename='author_text_cnn_'+output_filename
     output_file = output_filename + '_' + str(count)+ '.tfrecords'
 
     print("Start to convert {} to {}".format(len(tf_lines), os.path.join(root_path, output_file)))
