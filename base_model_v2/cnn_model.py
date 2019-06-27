@@ -24,7 +24,7 @@ class CnnModel(Model):
         self.category_ids = category_ids
 
 
-    def build_network(self):
+    def build_network(self,squeeze_label_ids):
         """
         Build network function.
         """
@@ -33,7 +33,7 @@ class CnnModel(Model):
 
         #self.variable_summaries('embedding', embedding)
         # embedded_words_expanded = self. expand_dims(embedding, -1)
-        logits, predict_label_ids, l2_loss = self.build_cnn()
+        logits, predict_label_ids, l2_loss = self.build_cnn(squeeze_label_ids)
         return logits, predict_label_ids, l2_loss
     #build_loss(self, labels, logits, l2_loss=0.0)
     def build_loss(self, labels, logits, l2_loss=0):
