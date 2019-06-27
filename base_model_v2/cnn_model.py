@@ -72,7 +72,7 @@ class CnnModel(Model):
                     padding="VALID"
                 )  # activation=tf.nn.relu
                 # conv = tf.layers.batch_normalization(conv, training=(mode == tf.estimator.ModeKeys.TRAIN))
-                conv = tf.nn.relu(conv)
+                conv = tf.nn.relu(conv) #shape
                 if 'dropout_prob' in self.config and self.config['dropout_prob'] > 0.0:
                     # h_pool_flat = tf.layers.batch_normalization(h_pool_flat, training=(mode == tf.estimator.ModeKeys.TRAIN))
 
@@ -89,6 +89,8 @@ class CnnModel(Model):
         h_pool = tf.concat(pooled_outputs, 3)  # shape: (batch, 1, len(filter_size) * embedding_size, 1)
         print("===============h_pool.shape{}--len(filter_size) {} * embedding_size{}".format(h_pool.shape,len(self.config['filter_sizes']),self.config['word_dim']))
         h_pool_flat = tf.reshape(h_pool, [-1, self.config['num_filters'] * len(self.config['filter_sizes'])])  # shape: (batch, len(filter_size) * embedding_size)
+        print("===============h_pool_flat.shape{}--self.config['num_filters'] {} * len(self.config['filter_sizes']{}".format(h_pool_flat.shape,self.config['num_filters'],len(self.config['filter_sizes'])))
+
         if 'dropout_prob' in self.config and self.config['dropout_prob'] > 0.0:
             # h_pool_flat = tf.layers.batch_normalization(h_pool_flat, training=(mode == tf.estimator.ModeKeys.TRAIN))
 
