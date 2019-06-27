@@ -29,7 +29,8 @@ class CnnModel(Model):
         Build network function.
         """
         initializer_range=0.02
-        embedding_table = tf.get_variable(name="embedding_table", shape=[self.config['word_dim'], self.config['id_word']],
+        #shape = [vocab_size, embedding_size]
+        embedding_table = tf.get_variable(name="embedding_table", shape=[len(self.config['id_word']),self.config['word_dim']],
                                           initializer=self.truncated_normal_initializer(initializer_range),
                                           dtype=tf.float32, trainable=True)
 
