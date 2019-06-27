@@ -76,16 +76,16 @@ class CnnModel(Model):
                 if 'dropout_prob' in self.config and self.config['dropout_prob'] > 0.0:
                     # h_pool_flat = tf.layers.batch_normalization(h_pool_flat, training=(mode == tf.estimator.ModeKeys.TRAIN))
 
-                    conv = tf.layers.dropout(conv, self.config['dropout_prob'],
-                                             training=self.is_training)
-
+                    conv = tf.layers.dropout(conv, self.config['dropout_prob'],training=self.is_training)
+                print("conv {}".format(conv.shape))
                 pooled = tf.layers.max_pooling2d(
                     conv,
                     pool_size=[self.config['dropout_prob'] - filter_size + 1, 1],
                     strides=(1, 1),
                     padding="VALID")
                 pooled_outputs.append(pooled)
-
+                print("pooled {}".format(pooled.shape))
+        #h_pool.shape(?, 200, 1, 384)--len(filter_size) 3 * embedding_size200
         h_pool = tf.concat(pooled_outputs, 3)  # shape: (batch, 1, len(filter_size) * embedding_size, 1)
         print("===============h_pool.shape{}--len(filter_size) {} * embedding_size{}".format(h_pool.shape,len(self.config['filter_sizes']),self.config['word_dim']))
         h_pool_flat = tf.reshape(h_pool, [-1, self.config['num_filters'] * len(self.config['filter_sizes'])])  # shape: (batch, len(filter_size) * embedding_size)
