@@ -58,7 +58,7 @@ class CnnModel(Model):
 
     def build_cnn(self, sentence):
         sentence=tf.expand_dims(sentence, -1)
-        print("sentence.shape {}".format(sentence.shape))
+        print("===================sentence.shape {}".format(sentence.shape))
         pooled_outputs = []
         l2_loss = tf.constant(0.0)  # 先不用，写0
 
@@ -87,7 +87,7 @@ class CnnModel(Model):
                 pooled_outputs.append(pooled)
 
         h_pool = tf.concat(pooled_outputs, 3)  # shape: (batch, 1, len(filter_size) * embedding_size, 1)
-        print("h_pool.shape{}--len(filter_size) {} * embedding_size{}".format(h_pool.shape,len(filter_size),self.config['word_dim']))
+        print("===============h_pool.shape{}--len(filter_size) {} * embedding_size{}".format(h_pool.shape,len(self.config['filter_sizes']),self.config['word_dim']))
         h_pool_flat = tf.reshape(h_pool, [-1, self.config['num_filters'] * len(self.config['filter_sizes'])])  # shape: (batch, len(filter_size) * embedding_size)
         if 'dropout_prob' in self.config and self.config['dropout_prob'] > 0.0:
             # h_pool_flat = tf.layers.batch_normalization(h_pool_flat, training=(mode == tf.estimator.ModeKeys.TRAIN))
@@ -97,7 +97,7 @@ class CnnModel(Model):
         h_pool_flat = tf.layers.batch_normalization(h_pool_flat, training=self.is_training)
 
         logits = tf.layers.dense(h_pool_flat, self.config['label_size'], activation=None)
-        print("logits.shape{}".format(logits))
+        print("======================logits.shape{}".format(logits))
         # with tf.variable_scope("output"):
         #     output_w = tf.get_variable("output_w", shape=[hidden_size, self.config['label_size']])
         #     output_b =  self.initialize_bias("output_b", shape=self.config['label_size'])
