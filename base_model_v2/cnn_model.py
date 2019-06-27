@@ -28,16 +28,12 @@ class CnnModel(Model):
         """
         Build network function.
         """
-        initializer_range=0.02
-        #shape = [vocab_size, embedding_size]
-        embedding_table = tf.get_variable(name="embedding_table", shape=[len(self.config['id_word']),self.config['word_dim']],
-                                          initializer=self.truncated_normal_initializer(initializer_range),
-                                          dtype=tf.float32, trainable=True)
 
-        sentence = tf.nn.embedding_lookup(embedding_table, self.input_ids)
+        #shape = [vocab_size, embedding_size]
+
         #self.variable_summaries('embedding', embedding)
         # embedded_words_expanded = self. expand_dims(embedding, -1)
-        logits, predict_label_ids, l2_loss = self.build_cnn(sentence)
+        logits, predict_label_ids, l2_loss = self.build_cnn()
         return logits, predict_label_ids, l2_loss
     #build_loss(self, labels, logits, l2_loss=0.0)
     def build_loss(self, labels, logits, l2_loss=0):
@@ -56,7 +52,15 @@ class CnnModel(Model):
                 loss = tf.reduce_mean(losses) + self.config['l2_reg_lambda']*l2_loss
         return loss
 
-    def build_cnn(self, sentence):
+    def build_cnn(self):
+        initializer_range = 0.02
+        embedding_table = tf.get_variable(name="embedding_table",
+                                          shape=[len(self.config['id_word']), self.config['word_dim']],
+                                          initializer=self.truncated_normal_initializer(initializer_range),
+                                          dtype=tf.float32, trainable=True)
+
+        sentence = tf.nn.embedding_lookup(embedding_table, self.input_ids)
+
         sentence=tf.expand_dims(sentence, -1)
         print("===================sentence.shape {}".format(sentence.shape))
         pooled_outputs = []
