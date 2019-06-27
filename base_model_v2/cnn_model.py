@@ -50,7 +50,7 @@ class CnnModel(Model):
         with tf.variable_scope("loss"):
             if self.config['use_focal_loss']:
                 losses = focal_loss_softmax(labels=labels, logits=logits)
-                loss = losses + self.config['l2_reg_lambda'] * l2_loss
+                loss = losses #+ self.config['l2_reg_lambda'] * l2_loss
             else:
                 losses = tf.nn.sparse_softmax_cross_entropy_with_logits(labels=labels, logits=logits)
                 loss = tf.reduce_mean(losses) + self.config['l2_reg_lambda']*l2_loss
@@ -63,7 +63,7 @@ class CnnModel(Model):
         l2_loss = tf.constant(0.0)  # 先不用，写0
 
         for filter_size in self.config['filter_sizes']:
-            with tf.variable_scope("conv-maxpool-%s" % filter_size):
+
                 conv = tf.layers.conv2d(
                     sentence,
                     filters=self.config['num_filters'],
