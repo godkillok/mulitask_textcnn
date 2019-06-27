@@ -28,11 +28,15 @@ class CnnModel(Model):
         """
         Build network function.
         """
-        embedding = self.embedding_lookup(self.input_ids, self.config['id_word'], embedding_size=self.config['word_dim'], initializer_range=0.02,
-                         word_embedding_name="embedding_table", emb_path=self.config['emb_file'])
-        self.variable_summaries('embedding', embedding)
-        embedded_words_expanded = self. expand_dims(embedding, -1)
-        logits, predict_label_ids, l2_loss = self.build_cnn(embedded_words_expanded)
+        initializer_range=0.02
+        embedding_table = tf.get_variable(name="embedding_table", shape=[self.config['word_dim'], self.config['id_word']],
+                                          initializer=self.truncated_normal_initializer(initializer_range),
+                                          dtype=tf.float32, trainable=True)
+
+        sentence = tf.nn.embedding_lookup(embedding_table, self.input_ids)
+        #self.variable_summaries('embedding', embedding)
+        # embedded_words_expanded = self. expand_dims(embedding, -1)
+        logits, predict_label_ids, l2_loss = self.build_cnn(sentence)
         return logits, predict_label_ids, l2_loss
     #build_loss(self, labels, logits, l2_loss=0.0)
     def build_loss(self, labels, logits, l2_loss=0):
@@ -51,77 +55,52 @@ class CnnModel(Model):
                 loss = tf.reduce_mean(losses) + self.config['l2_reg_lambda']*l2_loss
         return loss
 
-    def build_cnn(self, input_tensor):
+    def build_cnn(self, sentence):
+        sentence=tf.expand_dims(sentence, -1)
+
         pooled_outputs = []
         l2_loss = tf.constant(0.0)  # 先不用，写0
+
         for filter_size in self.config['filter_sizes']:
             with tf.variable_scope("conv-maxpool-%s" % filter_size):
-                # 卷积层
-                filter_shape = [filter_size, self.config['word_dim'], 1, self.config['num_filters']]
-                w =  self.initialize_weight("w", filter_shape)
-                conv = tf.nn.conv2d(input_tensor, w, strides=[1, 1, 1, 1],
-                                    padding="VALID", name="conv")  # 未使用全零填充
-                # 加BN层
-                conv =  self.batch_norm(conv)
-                # intermediate_act_fn = self.get_activation('relu')
-                # relu = tf.layers.dense(
-                #     conv,
-                #     self.config['num_filters'],
-                #     activation=intermediate_act_fn,
-                #     kernel_initializer=tf.zeros_initializer())
-                b =  self.initialize_bias("b", self.config['num_filters'])
-                relu = tf.nn.relu(tf.nn.bias_add(conv, b), name="relu")
-                # 池化
-                pooled = tf.nn.max_pool(relu, ksize=[1, self.config['max_length'] - filter_size + 1, 1, 1],
-                                        strides=[1, 1, 1, 1], padding="VALID", name="pool")
+                conv = tf.layers.conv2d(
+                    sentence,
+                    filters=self.config['num_filters'],
+                    kernel_size=[filter_size, self.config['word_dim']],
+                    strides=(1, 1),
+                    padding="VALID"
+                )  # activation=tf.nn.relu
+                # conv = tf.layers.batch_normalization(conv, training=(mode == tf.estimator.ModeKeys.TRAIN))
+                conv = tf.nn.relu(conv)
+                if 'dropout_rate' in self.config and self.config['dropout_rate'] > 0.0:
+                    # h_pool_flat = tf.layers.batch_normalization(h_pool_flat, training=(mode == tf.estimator.ModeKeys.TRAIN))
+
+                    conv = tf.layers.dropout(conv, self.config['dropout_rate'],
+                                             training=self.is_training)
+
+                pooled = tf.layers.max_pooling2d(
+                    conv,
+                    pool_size=[self.config['dropout_rate'] - filter_size + 1, 1],
+                    strides=(1, 1),
+                    padding="VALID")
                 pooled_outputs.append(pooled)
-        num_filters_total = self.config['num_filters'] * len(self.config['filter_sizes'])
-        h_pool = tf.concat(pooled_outputs, -1)  # 按照第四维进行连接，h_pool的shape为[batch_size,1,1,num_filters_total]
-        output_layer  = tf.reshape(h_pool, [-1, num_filters_total])  # 扁平化数据，跟全连接层相连
 
-        if self.config['use_author_feature']:
-            author_embedding_table = tf.get_variable(name='author_embedding_name',
-                                                     shape=[self.config['author_size'], self.config['feature_dim']],
-                                                     initializer=tf.keras.initializers.he_normal(), dtype=tf.float32)
-            author_embedding = tf.reshape(tf.nn.embedding_lookup(author_embedding_table, self.author_id),
-                                          [-1, self.config['feature_dim']])
+        h_pool = tf.concat(pooled_outputs, 3)  # shape: (batch, 1, len(filter_size) * embedding_size, 1)
+        h_pool_flat = tf.reshape(h_pool, [-1, self.config['num_filters'] * len(self.config['filter_sizes'])])  # shape: (batch, len(filter_size) * embedding_size)
+        if 'dropout_rate' in self.config and self.config['dropout_rate'] > 0.0:
+            # h_pool_flat = tf.layers.batch_normalization(h_pool_flat, training=(mode == tf.estimator.ModeKeys.TRAIN))
 
-            output_layer = tf.concat([output_layer , author_embedding], axis=1)
+            h_pool_flat = tf.layers.dropout(h_pool_flat, self.config['dropout_rate'],
+                                            training=self.is_training)
+        h_pool_flat = tf.layers.batch_normalization(h_pool_flat, training=self.is_training)
 
-        if self.config['use_category_feature']:
-            category_embedding_table = tf.get_variable(name='category_embedding_name',
-                                                       shape=[self.config['category_size'], self.config['feature_dim']],
-                                                       initializer=tf.keras.initializers.he_normal(), dtype=tf.float32)
+        logits = tf.layers.dense(h_pool_flat, self.config['label_size'], activation=None)
 
-            category_embedding = tf.reshape(tf.nn.embedding_lookup(category_embedding_table, self.category_ids),
-                                            [-1, 2 * self.config['feature_dim']])
-
-            output_layer = tf.concat([output_layer, category_embedding], axis=1)
-
-        if self.config['use_keyword_feature']:
-            keyword_embedding_table = tf.get_variable(name='keyword_embedding_name',
-                                                      shape=[self.config['keyword_size'], self.config['feature_dim']],
-                                                      initializer=tf.keras.initializers.he_normal(), dtype=tf.float32)
-            keyword_label_embedding_table = tf.get_variable(name='label_embedding_name',
-                                                            shape=[self.config['label_size'] + 1, self.config['feature_dim']],
-                                                            initializer=tf.keras.initializers.he_normal(),
-                                                            dtype=tf.float32)
-            keyword_embedding = tf.nn.embedding_lookup(keyword_embedding_table, self.keyword_ids)
-
-            keyword_label_embedding = tf.nn.embedding_lookup(keyword_label_embedding_table, self.keyword_label_ids)
-
-            sum_keyword_embedding = tf.reduce_mean(keyword_embedding, axis=1)
-            sum_keyword_label_embedding = tf.reduce_mean(keyword_label_embedding, axis=1)
-
-            output_layer = tf.concat([output_layer, sum_keyword_embedding, sum_keyword_label_embedding], axis=1)
-        output_layer = gelu(output_layer)
-        output_layer = self.dropout(output_layer, self.config['dropout_prob'])
-        hidden_size = output_layer.shape[-1].value
-        with tf.variable_scope("output"):
-            output_w = tf.get_variable("output_w", shape=[hidden_size, self.config['label_size']])
-            output_b =  self.initialize_bias("output_b", shape=self.config['label_size'])
-            logits = tf.nn.xw_plus_b(output_layer, output_w, output_b)
-            l2_loss += tf.nn.l2_loss(output_w) + tf.nn.l2_loss(output_b)
+        # with tf.variable_scope("output"):
+        #     output_w = tf.get_variable("output_w", shape=[hidden_size, self.config['label_size']])
+        #     output_b =  self.initialize_bias("output_b", shape=self.config['label_size'])
+        #     logits = tf.nn.xw_plus_b(output_layer, output_w, output_b)
+        #     l2_loss += tf.nn.l2_loss(output_w) + tf.nn.l2_loss(output_b)
 
         predict_label_ids = tf.argmax(logits, axis=1, name="predict_label_id")  # 预测结果
         return logits, predict_label_ids, l2_loss
