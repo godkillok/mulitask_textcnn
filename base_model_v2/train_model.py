@@ -14,8 +14,10 @@ def model_fn(features, labels, mode, params):
     category_ids = features["categories"]
     label_id = features["label"]
     cnn = CnnModel(params, input_ids, author_id, category_ids, training)
-    logits, predict_label_ids, l2_loss = cnn.build_network()
+
     squeeze_label_ids = tf.squeeze(label_id, axis=1)
+    logits, predict_label_ids, loss = cnn.build_network(squeeze_label_ids,)
+
     if mode == tf.estimator.ModeKeys.PREDICT:
         # Predictions
         #words = tf.contrib.lookup.index_to_string_table_from_file(params['vocab'])
@@ -27,7 +29,7 @@ def model_fn(features, labels, mode, params):
         return tf.estimator.EstimatorSpec(mode, predictions=predictions)
     else:
         # Loss
-        loss = tf.cast(cnn.build_loss(squeeze_label_ids, logits, l2_loss), dtype=tf.float32)
+
         train_op = optimization.create_optimizer(loss, params['learning_rate'], params['train_steps'], params['num_warmup_steps'])
         if mode == tf.estimator.ModeKeys.EVAL:
             # Metrics

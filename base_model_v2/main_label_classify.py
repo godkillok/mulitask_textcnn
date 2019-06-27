@@ -49,7 +49,7 @@ flags.DEFINE_integer("early_stop_epoches", 5, "Stop train if eval result doesn't
 tf.flags.DEFINE_string("filter_sizes", "3,4,5", "Comma-spearated filter sizes (default: '3,4,5')")
 tf.flags.DEFINE_integer("num_filters", 128, "Number of filters per filter size (default: 128)")
 tf.flags.DEFINE_float("l2_reg_lambda", 0.2, "L2 regularization lambda (default: 0.0)")
-flags.DEFINE_integer("word_dim", 200, "Embedding size for chars")
+flags.DEFINE_integer("word_dim", 100, "Embedding size for chars")
 flags.DEFINE_integer("feature_dim", 16, "Embedding size for author feature")
 
 FLAGS = tf.app.flags.FLAGS

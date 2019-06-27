@@ -52,7 +52,7 @@ class CnnModel(Model):
                 loss = tf.reduce_mean(losses) + self.config['l2_reg_lambda']*l2_loss
         return loss
 
-    def build_cnn(self):
+    def build_cnn(self,squeeze_label_ids):
         initializer_range = 0.02
         embedding_table = tf.get_variable(name="embedding_table",
                                           shape=[len(self.config['id_word']), self.config['word_dim']],
@@ -111,6 +111,6 @@ class CnnModel(Model):
         #     l2_loss += tf.nn.l2_loss(output_w) + tf.nn.l2_loss(output_b)
 
         predict_label_ids = tf.argmax(logits, axis=1, name="predict_label_id")  # 预测结果
-        time.sleep(20)
-        return logits, predict_label_ids, l2_loss
+        loss = tf.cast(self.build_loss(squeeze_label_ids, logits), dtype=tf.float32)
+        return logits, predict_label_ids, loss
 
