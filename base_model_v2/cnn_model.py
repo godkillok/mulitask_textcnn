@@ -73,25 +73,25 @@ class CnnModel(Model):
                 )  # activation=tf.nn.relu
                 # conv = tf.layers.batch_normalization(conv, training=(mode == tf.estimator.ModeKeys.TRAIN))
                 conv = tf.nn.relu(conv)
-                if 'dropout_rate' in self.config and self.config['dropout_rate'] > 0.0:
+                if 'dropout_prob' in self.config and self.config['dropout_prob'] > 0.0:
                     # h_pool_flat = tf.layers.batch_normalization(h_pool_flat, training=(mode == tf.estimator.ModeKeys.TRAIN))
 
-                    conv = tf.layers.dropout(conv, self.config['dropout_rate'],
+                    conv = tf.layers.dropout(conv, self.config['dropout_prob'],
                                              training=self.is_training)
 
                 pooled = tf.layers.max_pooling2d(
                     conv,
-                    pool_size=[self.config['dropout_rate'] - filter_size + 1, 1],
+                    pool_size=[self.config['dropout_prob'] - filter_size + 1, 1],
                     strides=(1, 1),
                     padding="VALID")
                 pooled_outputs.append(pooled)
 
         h_pool = tf.concat(pooled_outputs, 3)  # shape: (batch, 1, len(filter_size) * embedding_size, 1)
         h_pool_flat = tf.reshape(h_pool, [-1, self.config['num_filters'] * len(self.config['filter_sizes'])])  # shape: (batch, len(filter_size) * embedding_size)
-        if 'dropout_rate' in self.config and self.config['dropout_rate'] > 0.0:
+        if 'dropout_prob' in self.config and self.config['dropout_prob'] > 0.0:
             # h_pool_flat = tf.layers.batch_normalization(h_pool_flat, training=(mode == tf.estimator.ModeKeys.TRAIN))
 
-            h_pool_flat = tf.layers.dropout(h_pool_flat, self.config['dropout_rate'],
+            h_pool_flat = tf.layers.dropout(h_pool_flat, self.config['dropout_prob'],
                                             training=self.is_training)
         h_pool_flat = tf.layers.batch_normalization(h_pool_flat, training=self.is_training)
 
