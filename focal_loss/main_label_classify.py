@@ -13,7 +13,7 @@ from logger import get_logger
 log_file_name = os.path.basename(__file__).split('.', 1)[0] + '.log'
 # Save params
 
-os.environ["CUDA_VISIBLE_DEVICES"] = "4"
+os.environ["CUDA_VISIBLE_DEVICES"] = "9"
 # 当日志文件大小小于5M时，则以追加模式写
 if os.path.exists(log_file_name) is False or os.path.getsize(log_file_name) / 1024 / 1024 < 5:
     logger = get_logger(log_file_name, mode='a')
@@ -22,14 +22,14 @@ else:
     logger = get_logger(log_file_name)
 
 flags = tf.app.flags
-# configurations for training12
+# configurations for training1
 flags.DEFINE_bool("do_train", True, "Whether to run training.")
 flags.DEFINE_bool("do_predict", True, "Whether to run the model in inference mode on the test set.")
 flags.DEFINE_integer("batch_size", 256, "batch size")
 flags.DEFINE_string("data_dir", '/data/tanggp/youtube8m', "The input datadir.")
 flags.DEFINE_integer("shuffle_buffer_size", 20000, "dataset shuffle buffer size")  # 只影响取数据的随机性
-flags.DEFINE_integer("num_parallel_calls", 5, "Num of cpu cores")
-flags.DEFINE_integer("num_parallel_readers", 5, "Number of files read at the same time")
+flags.DEFINE_integer("num_parallel_calls", 40, "Num of cpu cores")
+flags.DEFINE_integer("num_parallel_readers", 40, "Number of files read at the same time")
 flags.DEFINE_float("learning_rate", 0.001, "Initial learning rate")
 flags.DEFINE_integer("steps_check", 500, "steps per checkpoint")
 flags.DEFINE_string("train_file", "/data/tanggp/youtube8m/author_text_cnn_txt_train_*", "train file pattern")
@@ -39,8 +39,8 @@ flags.DEFINE_string("emb_file", None, "Path for pre_trained embedding")
 #flags.DEFINE_string("emb_file", "", "Path for pre_trained embedding")
 flags.DEFINE_string("params_file", "/data/tanggp/youtube8m/textcnn_dataset_params.json", "parameters file")
 flags.DEFINE_string("word_path", "/data/tanggp/youtube8m/textcnn_words.txt", "word vocabulary file")
-flags.DEFINE_string("model_dir", "/data/tanggp/textcnn_focus_model", "Path to save model")
-flags.DEFINE_string("result_file", "/data/tanggp/textcnn_focus_model/base_result.txt", "Path to save predict result")
+flags.DEFINE_string("model_dir", "/data/tanggp/textcnn_baseline_model_v2", "Path to save model")
+flags.DEFINE_string("result_file", "/data/tanggp/textcnn_baseline_model_v2/base_result.txt", "Path to save predict result")
 flags.DEFINE_float("warmup_proportion", 0.1, "Proportion of training to perform linear learning rate warmup for.")
 # configurations for the model
 flags.DEFINE_float("dropout_prob", 0.2, "Dropout rate")  # 以0.2的概率drop out
@@ -49,7 +49,7 @@ flags.DEFINE_integer("early_stop_epoches", 5, "Stop train if eval result doesn't
 tf.flags.DEFINE_string("filter_sizes", "3,4,5", "Comma-spearated filter sizes (default: '3,4,5')")
 tf.flags.DEFINE_integer("num_filters", 128, "Number of filters per filter size (default: 128)")
 tf.flags.DEFINE_float("l2_reg_lambda", 0.2, "L2 regularization lambda (default: 0.0)")
-flags.DEFINE_integer("word_dim", 200, "Embedding size for chars")
+flags.DEFINE_integer("word_dim", 100, "Embedding size for chars")
 flags.DEFINE_integer("feature_dim", 16, "Embedding size for author feature")
 
 FLAGS = tf.app.flags.FLAGS
@@ -89,6 +89,7 @@ def input_fn(filenames, config, shuffle_buffer_size):
     dataset = dataset.apply(tf.data.experimental.map_and_batch(map_func=parser, batch_size=FLAGS.batch_size,
                                                           num_parallel_calls=FLAGS.num_parallel_calls))
     return dataset
+
 def id_word_map():
     with open(FLAGS.word_path, 'r', encoding='utf8') as f:
         lines = f.readlines()
@@ -137,7 +138,7 @@ if __name__ == '__main__':
             'train_steps': train_steps,
             'summary_dir':model_dir,
             "label_size":20,
-            'use_focal_loss':True,
+            'use_focal_loss':False,
             'use_author_feature': False,
             'use_category_feature': False,
             'use_keyword_feature': False,
