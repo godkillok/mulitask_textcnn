@@ -80,7 +80,7 @@ class CnnModel(Model):
                 print("conv {}".format(conv.shape))
                 pooled = tf.layers.max_pooling2d(
                     conv,
-                    pool_size=[self.config['dropout_prob'] - filter_size + 1, 1],
+                    pool_size=[self.config['max_length'] - filter_size + 1, 1],
                     strides=(1, 1),
                     padding="VALID")
                 pooled_outputs.append(pooled)
