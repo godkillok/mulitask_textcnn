@@ -27,7 +27,7 @@ def save_vocab_to_txt_file(vocab, txt_path):
         vocab: (iterable object) yields token
         txt_path: (stirng) path to vocab file
     """
-    with open(txt_path, "w") as f:
+    with open(txt_path, "w",encoding="utf8") as f:
         f.write("\n".join(token for token in vocab))
 
 
@@ -37,7 +37,7 @@ def save_dict_to_json(d, json_path):
         d: (dict)
         json_path: (string) path to json file
     """
-    with open(json_path, 'w') as f:
+    with open(json_path, 'w',encoding="utf8") as f:
         d = {k: v for k, v in d.items()}
         json.dump(d, f, indent=4)
 
@@ -50,7 +50,7 @@ def update_vocab(txt_path, vocab):
     Returns:
         dataset_size: (int) number of elements in the dataset
     """
-    with open(txt_path) as f:
+    with open(txt_path,"r",encoding="utf8") as f:
         for i, line in enumerate(f):
             fields = line.strip().split(',')
             if len(fields) < 3: continue
