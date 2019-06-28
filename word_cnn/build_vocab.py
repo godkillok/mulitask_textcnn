@@ -93,6 +93,6 @@ if __name__ == '__main__':
     }
     save_dict_to_json(sizes, os.path.join(args.data_dir, 'dataset_params.json'))
 
-    # Logging sizes
+    # Logging sizes1
     to_print = "\n".join("- {}: {}".format(k, v) for k, v in sizes.items())
     print("Characteristics of the dataset:\n{}".format(to_print))
