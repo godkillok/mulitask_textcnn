@@ -33,7 +33,7 @@ flags.DEFINE_integer("num_parallel_readers", 40, "Number of files read at the sa
 flags.DEFINE_float("learning_rate", 0.01, "Initial learning rate")
 flags.DEFINE_integer("steps_check", 500, "steps per checkpoint")
 flags.DEFINE_string("train_file", "/data/tanggp/youtube8m/author_text_cnn_txt_train_*", "train file pattern")
-flags.DEFINE_string("valid_file", "/data/tanggp/youtube8m/author_text_cnn_txt_valid_*", "train file pattern")
+flags.DEFINE_string("valid_file", "/data/tanggp/youtube8m/author_text_cnn_txt_golden_*", "train file pattern")
 #flags.DEFINE_string("valid_file", "/data/tanggp/youtube8m/text_cnn_txt_golden_*", "evalue file pattern")
 flags.DEFINE_string("emb_file", None, "Path for pre_trained embedding")
 #flags.DEFINE_string("emb_file", "", "Path for pre_trained embedding")
