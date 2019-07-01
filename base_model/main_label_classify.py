@@ -30,7 +30,7 @@ flags.DEFINE_string("data_dir", '/data/tanggp/youtube8m', "The input datadir.")
 flags.DEFINE_integer("shuffle_buffer_size", 20000, "dataset shuffle buffer size")  # 只影响取数据的随机性
 flags.DEFINE_integer("num_parallel_calls", 40, "Num of cpu cores")
 flags.DEFINE_integer("num_parallel_readers", 40, "Number of files read at the same time")
-flags.DEFINE_float("learning_rate", 0.001, "Initial learning rate")
+flags.DEFINE_float("learning_rate", 0.01, "Initial learning rate")
 flags.DEFINE_integer("steps_check", 500, "steps per checkpoint")
 flags.DEFINE_string("train_file", "/data/tanggp/youtube8m/author_text_cnn_txt_train_*", "train file pattern")
 flags.DEFINE_string("valid_file", "/data/tanggp/youtube8m/author_text_cnn_txt_train_*", "train file pattern")
