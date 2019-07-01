@@ -47,7 +47,7 @@ def save_dict_to_json(d, json_path):
         json.dump(d, f, indent=4)
 
 
-def update_author(txt_path, author):
+def update_author(txt_path, author,label):
     """Update word and tag vocabulary from dataset
     Args:
         txt_path: (string) path to file, one sentence per line
@@ -59,6 +59,7 @@ def update_author(txt_path, author):
         for i, line in enumerate(f):
             li=json.loads(line)
             author.append(li.get("source_user"))
+            label.append(li.get("label"))
 
 
 
@@ -68,9 +69,10 @@ if __name__ == '__main__':
     # Build word vocab with train and test datasets
     print("Building author...")
     author = []
-    update_author(os.path.join(args.data_dir, 'txt_train'), author)
-    update_author(os.path.join(args.data_dir, 'txt_golden'), author)
-    #update_author(os.path.join(args.data_dir, 'txt_valid'), author)
+    label=[]
+    update_author(os.path.join(args.data_dir, 'txt_train'), author,label)
+    update_author(os.path.join(args.data_dir, 'txt_golden'), author,label)
+    #update_author(os.path.join(args.data_dir, 'txt_valid'), author，label)
 
     author_sort=sorted(Counter(author).items(), key=lambda x: x[1], reverse=True)
     print('author num {}'.format(len(author_sort)))

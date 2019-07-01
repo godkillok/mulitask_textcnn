@@ -73,7 +73,7 @@ if __name__ == '__main__':
     categoriess = []
     update_categories(os.path.join(args.data_dir, 'txt_train'), categoriess)
     update_categories(os.path.join(args.data_dir, 'txt_golden'), categoriess)
-    #update_categories(os.path.join(args.data_dir, 'txt_valid'), categoriess)
+    update_categories(os.path.join(args.data_dir, 'txt_valid'), categoriess)
 
     categoriess_sort=sorted(Counter(categoriess).items(), key=lambda x: x[1], reverse=True)
     print('categoriess num {}'.format(len(categoriess_sort)))
