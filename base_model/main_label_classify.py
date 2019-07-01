@@ -44,7 +44,7 @@ flags.DEFINE_string("result_file", "/data/tanggp/textcnn_baseline_model/base_res
 flags.DEFINE_float("warmup_proportion", 0.1, "Proportion of training to perform linear learning rate warmup for.")
 # configurations for the model
 flags.DEFINE_float("dropout_prob", 0.2, "Dropout rate")  # 以0.2的概率drop out
-flags.DEFINE_integer("num_epoches", 15, "num of epoches")
+flags.DEFINE_integer("num_epoches", 20, "num of epoches")
 flags.DEFINE_integer("early_stop_epoches", 5, "Stop train if eval result doesn't improve after 2 epoches")
 tf.flags.DEFINE_string("filter_sizes", "3,4,5", "Comma-spearated filter sizes (default: '3,4,5')")
 tf.flags.DEFINE_integer("num_filters", 128, "Number of filters per filter size (default: 128)")
