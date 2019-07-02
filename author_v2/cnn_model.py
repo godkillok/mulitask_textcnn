@@ -110,7 +110,7 @@ class CnnModel(Model):
                                biases=nce_biases,
                                labels=self.author_id,
                                inputs=output_layer,
-                               num_sampled=2000,
+                               num_sampled=4000,
                                num_classes=self.config['author_size']))
 
 
