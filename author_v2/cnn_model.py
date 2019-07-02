@@ -79,41 +79,7 @@ class CnnModel(Model):
         h_pool = tf.concat(pooled_outputs, -1)  # 按照第四维进行连接，h_pool的shape为[batch_size,1,1,num_filters_total]
         output_layer  = tf.reshape(h_pool, [-1, num_filters_total])  # 扁平化数据，跟全连接层相连
 
-        if self.config['use_author_feature']:
-            author_embedding_table = tf.get_variable(name='author_embedding_name',
-                                                     shape=[self.config['author_size'], self.config['feature_dim']],
-                                                     initializer=tf.keras.initializers.he_normal(), dtype=tf.float32)
-            author_embedding = tf.reshape(tf.nn.embedding_lookup(author_embedding_table, self.author_id),
-                                          [-1, self.config['feature_dim']])
 
-            output_layer = tf.concat([output_layer , author_embedding], axis=1)
-
-        if self.config['use_category_feature']:
-            category_embedding_table = tf.get_variable(name='category_embedding_name',
-                                                       shape=[self.config['category_size'], self.config['feature_dim']],
-                                                       initializer=tf.keras.initializers.he_normal(), dtype=tf.float32)
-
-            category_embedding = tf.reshape(tf.nn.embedding_lookup(category_embedding_table, self.category_ids),
-                                            [-1, 2 * self.config['feature_dim']])
-
-            output_layer = tf.concat([output_layer, category_embedding], axis=1)
-
-        if self.config['use_keyword_feature']:
-            keyword_embedding_table = tf.get_variable(name='keyword_embedding_name',
-                                                      shape=[self.config['keyword_size'], self.config['feature_dim']],
-                                                      initializer=tf.keras.initializers.he_normal(), dtype=tf.float32)
-            keyword_label_embedding_table = tf.get_variable(name='label_embedding_name',
-                                                            shape=[self.config['label_size'] + 1, self.config['feature_dim']],
-                                                            initializer=tf.keras.initializers.he_normal(),
-                                                            dtype=tf.float32)
-            keyword_embedding = tf.nn.embedding_lookup(keyword_embedding_table, self.keyword_ids)
-
-            keyword_label_embedding = tf.nn.embedding_lookup(keyword_label_embedding_table, self.keyword_label_ids)
-
-            sum_keyword_embedding = tf.reduce_mean(keyword_embedding, axis=1)
-            sum_keyword_label_embedding = tf.reduce_mean(keyword_label_embedding, axis=1)
-
-            output_layer = tf.concat([output_layer, sum_keyword_embedding, sum_keyword_label_embedding], axis=1)
         output_layer = gelu(output_layer)
         output_layer = self.dropout(output_layer, self.config['dropout_prob'])
         hidden_size = output_layer.shape[-1].value
@@ -144,7 +110,7 @@ class CnnModel(Model):
                                biases=nce_biases,
                                labels=self.author_id,
                                inputs=output_layer,
-                               num_sampled=100,
+                               num_sampled=1000,
                                num_classes=self.config['author_size']))
 
 
