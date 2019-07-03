@@ -37,8 +37,8 @@ flags.DEFINE_string("emb_file", None, "Path for pre_trained embedding")
 #flags.DEFINE_string("emb_file", "", "Path for pre_trained embedding")
 flags.DEFINE_string("params_file", "/data/tanggp/youtube8m/textcnn_dataset_params.json", "parameters file")
 flags.DEFINE_string("word_path", "/data/tanggp/youtube8m/textcnn_words.txt", "word vocabulary file")
-flags.DEFINE_string("model_dir", "/data/tanggp/textcnn_author_model", "Path to save model")
-flags.DEFINE_string("result_file", "/data/tanggp/textcnn_author_model/base_result.txt", "Path to save predict result")
+flags.DEFINE_string("model_dir", "/data/tanggp/textcnn_author_model_v4", "Path to save model")
+flags.DEFINE_string("result_file", "/data/tanggp/textcnn_author_model_v4/base_result.txt", "Path to save predict result")
 flags.DEFINE_float("warmup_proportion", 0.1, "Proportion of training to perform linear learning rate warmup for.")
 # configurations for the model
 flags.DEFINE_float("dropout_prob", 0.2, "Dropout rate")  # 以0.2的概率drop out
