@@ -49,7 +49,7 @@ class CnnModel(Model):
             else:
                 losses = tf.nn.sparse_softmax_cross_entropy_with_logits(labels=labels, logits=logits)
                 loss = tf.reduce_mean(losses) + self.config['l2_reg_lambda']*l2_loss
-        return loss+author_loss
+        return 0.1*loss+0.9*author_loss
 
     def build_cnn(self, input_tensor):
         pooled_outputs = []
