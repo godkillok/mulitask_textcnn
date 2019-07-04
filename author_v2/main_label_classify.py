@@ -13,7 +13,7 @@ from logger import get_logger
 log_file_name = os.path.basename(__file__).split('.', 1)[0] + '.log'
 # Save params
 # 当日志文件大小小于5M时，则以追加模式写
-os.environ["CUDA_VISIBLE_DEVICES"] = "9"
+os.environ["CUDA_VISIBLE_DEVICES"] = "4"
 
 if os.path.exists(log_file_name) is False or os.path.getsize(log_file_name) / 1024 / 1024 < 5:
     logger = get_logger(log_file_name, mode='a')
@@ -37,8 +37,8 @@ flags.DEFINE_string("emb_file", None, "Path for pre_trained embedding")
 #flags.DEFINE_string("emb_file", "", "Path for pre_trained embedding")
 flags.DEFINE_string("params_file", "/data/tanggp/youtube8m/textcnn_dataset_params.json", "parameters file")
 flags.DEFINE_string("word_path", "/data/tanggp/youtube8m/textcnn_words.txt", "word vocabulary file")
-flags.DEFINE_string("model_dir", "/data/tanggp/textcnn_author_model_v2", "Path to save model")
-flags.DEFINE_string("result_file", "/data/tanggp/textcnn_author_model_v2/base_result.txt", "Path to save predict result")
+flags.DEFINE_string("model_dir", "/data/tanggp/textcnn_author_model_v21", "Path to save model")
+flags.DEFINE_string("result_file", "/data/tanggp/textcnn_author_model_v21/base_result.txt", "Path to save predict result")
 flags.DEFINE_float("warmup_proportion", 0.1, "Proportion of training to perform linear learning rate warmup for.")
 # configurations for the model
 flags.DEFINE_float("dropout_prob", 0.2, "Dropout rate")  # 以0.2的概率drop out
