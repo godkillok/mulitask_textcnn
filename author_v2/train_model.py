@@ -27,7 +27,7 @@ def model_fn(features, labels, mode, params):
         return tf.estimator.EstimatorSpec(mode, predictions=predictions)
     else:
         # Loss
-        loss = tf.cast(cnn.build_loss(squeeze_label_ids, logits, l2_loss), dtype=tf.float32)
+        loss = tf.cast(cnn.build_loss(squeeze_label_ids, logits, l2_loss,author_loss), dtype=tf.float32)
         train_op = optimization.create_optimizer(loss, params['learning_rate'], params['train_steps'], params['num_warmup_steps'])
         if mode == tf.estimator.ModeKeys.EVAL:
             # Metrics
